@@ -1,14 +1,14 @@
 package es.iespuertolacruz.almacen.api;
 
 public class Operacion {
-    String idListaProductos;
-    String idMuelle;
+    int idListaProductos;
+    int idMuelle;
     String fecha;
     String tipoOperacion;
     String cif;
 
 
-    public Operacion(String idListaProductos, String idMuelle, String fecha, String tipoOperacion, String cif) {
+    public Operacion(int idListaProductos, int idMuelle, String fecha, String tipoOperacion, String cif) {
         this.idListaProductos = idListaProductos;
         this.idMuelle = idMuelle;
         this.fecha = fecha;

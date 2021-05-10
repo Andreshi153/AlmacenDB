@@ -23,11 +23,11 @@ public class AlmacenController {
         if (producto.getTipo().isEmpty() || producto.getTipo() == null) {
             mensaje += "El tipo del producto no puede ser nulo o vacio";
         }
-        if (producto.getIdProducto().isEmpty() || producto.getIdProducto() == null) {
-            mensaje += "El id del producto no puede ser nulo o vacio";
+        if (producto.getIdProducto() < 1) {
+            mensaje += "El id del producto no puede ser inferior a 1";
         }
-        if (producto.getMaxProducto() < 1) {
-            mensaje += "La cantidad maxima del producto no puede ser menor que 0";
+        if (producto.getPrecioUnitario() <= 0) {
+            mensaje += "El precio del producto no puede ser menor o igual que 0";
         }
         if(!mensaje.isBlank()) {
             throw new AlmacenException(mensaje);

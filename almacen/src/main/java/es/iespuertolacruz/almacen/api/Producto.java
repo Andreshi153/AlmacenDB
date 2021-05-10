@@ -1,21 +1,21 @@
 package es.iespuertolacruz.almacen.api;
 
 public class Producto {
-    String idProducto;
+    int idProducto;
     String nombre;
-    int maxProducto;
+    float precioUnitario;
     String tipo;
 
 
-    public Producto(String idProducto, String nombre, int maxProducto, String tipo) {
+    public Producto(int idProducto, String nombre, float precioUnitario, String tipo) {
         this.idProducto = idProducto;
         this.nombre = nombre;
-        this.maxProducto = maxProducto;
+        this.precioUnitario = precioUnitario;
         this.tipo = tipo;
     }
 
 
-    public String getIdProducto() {
+    public int getIdProducto() {
         return this.idProducto;
     }
 
@@ -23,8 +23,8 @@ public class Producto {
         return this.nombre;
     }
 
-    public int getMaxProducto() {
-        return this.maxProducto;
+    public float getPrecioUnitario() {
+        return this.precioUnitario;
     }
 
     public String getTipo() {
