@@ -12,4 +12,17 @@ public class ProductoEstanteria {
         this.cantidad = cantidad;
     }
 
+
+    public String getIdProducto() {
+        return this.idProducto;
+    }
+
+    public String getIdEstanteria() {
+        return this.idEstanteria;
+    }
+
+    public int getCantidad() {
+        return this.cantidad;
+    }
+    
 }

@@ -13,4 +13,20 @@ public class Estanteria {
         this.numHuecosOcupados = numHuecosOcupados;
     }
 
+    public int getIdEstanteria() {
+        return this.idEstanteria;
+    }
+
+    public char getIdZona() {
+        return this.idZona;
+    }
+
+    public int getNumAlturas() {
+        return this.numAlturas;
+    }
+
+    public int getNumHuecosOcupados() {
+        return this.numHuecosOcupados;
+    }
+
 }

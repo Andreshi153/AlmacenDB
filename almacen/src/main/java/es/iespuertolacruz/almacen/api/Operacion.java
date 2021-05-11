@@ -16,4 +16,24 @@ public class Operacion {
         this.cif = cif;
     }
 
+    public int getIdListaProductos() {
+        return this.idListaProductos;
+    }
+
+    public int getIdMuelle() {
+        return this.idMuelle;
+    }
+
+    public String getFecha() {
+        return this.fecha;
+    }
+
+    public String getTipoOperacion() {
+        return this.tipoOperacion;
+    }
+
+    public String getCif() {
+        return this.cif;
+    }
+
 }

@@ -1,11 +1,20 @@
 package es.iespuertolacruz.almacen.api;
 
-public class Proveedor extends Empresa {
+public class Proveedor {
 
+    String cif;
     String tipoProducto;
 
-    public Proveedor(String cif, String nombre, String direccion, String telefono, String correo, String tipoProducto) {
-        super(cif, nombre, direccion, telefono, correo);
+    public Proveedor(String cif, String tipoProducto) {
+        this.cif = cif;
         this.tipoProducto = tipoProducto;
+    }
+
+    public String getCif() {
+        return this.cif;
+    }
+    
+    public String getTipoProducto() {
+        return this.tipoProducto;
     }
 }

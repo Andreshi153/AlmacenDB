@@ -14,4 +14,25 @@ public class Empresa {
         this.telefono = telefono;
         this.correo = correo;
     }
+
+  public String getCif() {
+    return this.cif;
+  }
+
+  public String getNombre() {
+    return this.nombre;
+  }
+
+  public String getDireccion() {
+    return this.direccion;
+  }
+
+  public String getTelefono() {
+    return this.telefono;
+  }
+
+  public String getCorreo() {
+    return this.correo;
+  }
+    
 }

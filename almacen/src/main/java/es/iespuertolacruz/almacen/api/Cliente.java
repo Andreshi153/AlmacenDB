@@ -1,11 +1,20 @@
 package es.iespuertolacruz.almacen.api;
 
-public class Cliente extends Empresa {
+public class Cliente {
+
+    String cif;
     float porcentajeDesc;
 
-    public Cliente(String cif, String nombre, String direccion, String telefono, String correo, float porcentajeDesc) {
-        super(cif, nombre, direccion, telefono, correo);
+    public Cliente(String cif, float porcentajeDesc) {
+        this.cif = cif;
         this.porcentajeDesc = porcentajeDesc;
+    }
+
+    public String getCif() {
+        return this.cif;
+    }
+    public float getPorcentajeDesc() {
+        return this.porcentajeDesc;
     }
 
 }

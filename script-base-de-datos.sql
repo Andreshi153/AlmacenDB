@@ -38,7 +38,7 @@ CREATE TABLE lista_productos (
 CREATE TABLE muelle (
     id_muelle INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_zona CHAR,
-    disponible BOOLEAN,
+    disponible BOOLEAN DEFAULT false,
     FOREIGN KEY (id_zona) REFERENCES zona (id_zona)
 );
 CREATE TABLE empresa (
@@ -211,7 +211,7 @@ BEGIN
 END //
 DELIMITER ;
 
-
+-- Trigger de la cantidad de productos
 DROP TRIGGER IF EXISTS after_operacion_cantidad;
 DELIMITER //
 CREATE TRIGGER after_operacion_cantidad
