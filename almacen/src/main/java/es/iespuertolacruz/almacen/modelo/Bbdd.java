@@ -1,12 +1,12 @@
 package es.iespuertolacruz.almacen.modelo;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import es.iespuertolacruz.almacen.api.Cliente;
 import es.iespuertolacruz.almacen.api.Empresa;
@@ -36,11 +36,52 @@ public class Bbdd {
     private String usuario;
     private String password;
 
-    public Bbdd(String driver, String url, String usuario, String password) {
+    ArrayList<String> listaTablas;
+
+    public Bbdd(String driver, String url, String usuario, String password) throws BbddException {
         this.driver = driver;
         this.url = url;
         this.usuario = usuario;
         this.password = password;
+        init();
+    }
+
+    private void init() throws BbddException {
+        Connection connection = null;
+        for (String tabla : listaTablas) {
+            boolean existe = existeTabla(tabla);
+            if(!existe) {
+                // obtener la sentencia sql del fichero
+                String crearTabla = "";
+                actualizar(crearTabla);
+                // para cada uno de los insert
+                String insertElemento = "";
+                actualizar(insertElemento);
+            }
+        }
+    }
+
+    /**
+     * Funcion encargada de verificar si una tabla existe
+     * @param nombreTabla a verificar
+     * @return true/false
+     * @throws BbddException
+     */
+    private boolean existeTabla(String nombreTabla) throws BbddException {
+        Connection connection = null;
+        ResultSet resultSet = null;
+        boolean existe = false;
+        try {
+            connection = getConnection();
+            DatabaseMetaData meta = connection.getMetaData();
+            resultSet = meta.getTables(null, null, nombreTabla, new String[] {"TABLE"});
+            existe = resultSet.next();
+        } catch (Exception ex) {
+            //TODO: handle exception
+        } finally {
+            closeConnection(connection, null, resultSet);
+        }
+        return existe;
     }
 
     /**
