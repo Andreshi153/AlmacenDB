@@ -1,23 +1,23 @@
 package es.iespuertolacruz.almacen.api;
 
 public class ProductoEstanteria {
-    String idProducto;
-    String idEstanteria;
+    int idProducto;
+    int idEstanteria;
     int cantidad;
 
 
-    public ProductoEstanteria(String idProducto, String idEstanteria, int cantidad) {
+    public ProductoEstanteria(int idProducto, int idEstanteria, int cantidad) {
         this.idProducto = idProducto;
         this.idEstanteria = idEstanteria;
         this.cantidad = cantidad;
     }
 
 
-    public String getIdProducto() {
+    public int getIdProducto() {
         return this.idProducto;
     }
 
-    public String getIdEstanteria() {
+    public int getIdEstanteria() {
         return this.idEstanteria;
     }
 

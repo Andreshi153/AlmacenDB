@@ -18,7 +18,9 @@ import es.iespuertolacruz.almacen.api.Producto;
 import es.iespuertolacruz.almacen.api.ProductoEstanteria;
 import es.iespuertolacruz.almacen.api.Proveedor;
 import es.iespuertolacruz.almacen.api.Zona;
+import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class Bbdd {
 
@@ -38,7 +40,7 @@ public class Bbdd {
 
     ArrayList<String> listaTablas;
 
-    public Bbdd(String driver, String url, String usuario, String password) throws BbddException {
+    public Bbdd(String driver, String url, String usuario, String password) throws BbddException, FicheroException {
         this.driver = driver;
         this.url = url;
         this.usuario = usuario;
@@ -46,16 +48,12 @@ public class Bbdd {
         init();
     }
 
-    private void init() throws BbddException {
-        Connection connection = null;
+    private void init() throws BbddException, FicheroException {
         for (String tabla : listaTablas) {
-            boolean existe = existeTabla(tabla);
-            if(!existe) {
-                // obtener la sentencia sql del fichero
-                String crearTabla = "";
+            if(!existeTabla(tabla)) {
+                String crearTabla = new Fichero().leer("resources/sql/"+tabla+".crear.sql");
                 actualizar(crearTabla);
-                // para cada uno de los insert
-                String insertElemento = "";
+                String insertElemento = new Fichero().leer("resources/sql/"+tabla+".insertar.sql");
                 actualizar(insertElemento);
             }
         }
@@ -77,7 +75,7 @@ public class Bbdd {
             resultSet = meta.getTables(null, null, nombreTabla, new String[] {"TABLE"});
             existe = resultSet.next();
         } catch (Exception ex) {
-            //TODO: handle exception
+            throw new BbddException("Se ha producido un error verificando las tablas", ex);
         } finally {
             closeConnection(connection, null, resultSet);
         }
@@ -104,6 +102,28 @@ public class Bbdd {
         }
         return connection;
     }
+     /**
+     * Metodo que cierra las conexiciones con la base de datos
+     * @param connection
+     * @param statement
+     * @param resultSet
+     * @throws BbddException
+     */
+    private void closeConnection(Connection connection, Statement statement, ResultSet resultSet) throws BbddException {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (Exception exception) {
+            throw new BbddException("Se ha producido un error cerrando la conexion", exception);
+        }
+    }
 
     /* Inserciones */
 
@@ -119,6 +139,17 @@ public class Bbdd {
     }
 
     /**
+     * Metodo encargado de realizar la insercion de una zona
+     * @param zona a insertar
+     * @throws BbddException error controlado
+     */
+    public void insertar(Zona zona) throws BbddException {
+        String sql = "INSERT INTO zona (id_zona, tipo) " + VALUES + zona.getIdZona() + "'," + " '" + zona.getTipo()
+                + "');";
+        actualizar(sql);
+    }
+
+    /**
      * Metodo encargado de realizar la insercion de una estanteria
      * @param estanteria a insertar
      * @throws BbddException error controlado
@@ -130,13 +161,13 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de realizar la insercion de una zona
-     * @param zona a insertar
+     * Metodo encargado de realizar la insercion de un productoEstanteria
+     * @param productoEstanteria a insertar
      * @throws BbddException error controlado
      */
-    public void insertar(Zona zona) throws BbddException {
-        String sql = "INSERT INTO zona (id_zona, tipo) " + VALUES + zona.getIdZona() + "'," + " '" + zona.getTipo()
-                + "');";
+    public void insertar(ProductoEstanteria productoEstanteria) throws BbddException {
+        String sql = "INSERT INTO productoEstanteria " + VALUES + productoEstanteria.getIdEstanteria() + "', '"
+                + productoEstanteria.getIdEstanteria() + "', '" + productoEstanteria.getCantidad() + "');";
         actualizar(sql);
     }
 
@@ -152,6 +183,16 @@ public class Bbdd {
                 (producto, cantidad) -> sql.append("INSERT INTO lista_productos (id_lista_productos, id_zona, tipo)"
                         + VALUES + listaProductos.getIdListaProductos() + "'," + producto + ", " + cantidad + ");"));
         actualizar(sql.toString());
+    }
+
+    /**
+     * Metodo encargado de realizar la insercion de un muelle
+     * @param muelle a insertar
+     * @throws BbddException error controlado
+     */
+    public void insertar(Muelle muelle) throws BbddException {
+        String sql = "INSERT INTO muelle (id_zona)" + VALUES + muelle.getIdZona() + "');";
+        actualizar(sql);
     }
 
     /**
@@ -187,16 +228,6 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de realizar la insercion de un muelle
-     * @param muelle a insertar
-     * @throws BbddException error controlado
-     */
-    public void insertar(Muelle muelle) throws BbddException {
-        String sql = "INSERT INTO muelle (id_zona)" + VALUES + muelle.getIdZona() + "');";
-        actualizar(sql);
-    }
-
-    /**
      * Metodo encargado de realizar la insercion de una operacion
      * @param operacion a insertar
      * @throws BbddException error controlado
@@ -205,17 +236,6 @@ public class Bbdd {
         String sql = "INSERT INTO operacion " + VALUES + operacion.getIdListaProductos() + "', '"
                 + operacion.getIdMuelle() + "', '" + operacion.getFecha() + "', '" + operacion.getTipoOperacion()
                 + "', '" + operacion.getCif() + "');";
-        actualizar(sql);
-    }
-
-    /**
-     * Metodo encargado de realizar la insercion de un productoEstanteria
-     * @param productoEstanteria a insertar
-     * @throws BbddException error controlado
-     */
-    public void insertar(ProductoEstanteria productoEstanteria) throws BbddException {
-        String sql = "INSERT INTO productoEstanteria " + VALUES + productoEstanteria.getIdEstanteria() + "', '"
-                + productoEstanteria.getIdEstanteria() + "', '" + productoEstanteria.getCantidad() + "');";
         actualizar(sql);
     }
 
@@ -232,6 +252,16 @@ public class Bbdd {
     }
 
     /**
+     * Metodo encargado de eliminar una zona
+     * @param zona a eliminar
+     * @throws BbddException error controlado
+     */
+    public void eliminar(Zona zona) throws BbddException {
+        String sql = "DELETE FROM zona WHERE id_zona = '" + zona.getIdZona() + "';";
+        actualizar(sql);
+    }
+
+    /**
      * Metodo encargado de eliminar una estanteria
      * @param estanteria a eliminar
      * @throws BbddException error controlado
@@ -242,12 +272,13 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de eliminar una zona
-     * @param zona a eliminar
+     * Metodo encargado de eliminar un productoEstanteria
+     * @param productoEstanteria a eliminar
      * @throws BbddException error controlado
      */
-    public void eliminar(Zona zona) throws BbddException {
-        String sql = "DELETE FROM zona WHERE id_zona = '" + zona.getIdZona() + "';";
+    public void eliminar(ProductoEstanteria productoEstanteria) throws BbddException {
+        String sql = "DELETE FROM producto_estanteria WHERE id_producto = '" + productoEstanteria.getIdProducto()
+                + "AND id_estanteria = '" + productoEstanteria.getIdEstanteria() + "';";
         actualizar(sql);
     }
 
@@ -259,6 +290,16 @@ public class Bbdd {
     public void eliminar(ListaProductos listaProducto) throws BbddException {
         String sql = "DELETE FROM listaProducto WHERE id_lista_productos = '" + listaProducto.getIdListaProductos()
                 + "';";
+        actualizar(sql);
+    }
+
+    /**
+     * Metodo encargado de eliminar un muelle
+     * @param muelle a eliminar
+     * @throws BbddException error controlado
+     */
+    public void eliminar(Muelle muelle) throws BbddException {
+        String sql = "DELETE FROM muelle WHERE id_muelle = '" + muelle.getIdMuelle() + "';";
         actualizar(sql);
     }
 
@@ -293,33 +334,12 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de eliminar un muelle
-     * @param muelle a eliminar
-     * @throws BbddException error controlado
-     */
-    public void eliminar(Muelle muelle) throws BbddException {
-        String sql = "DELETE FROM muelle WHERE id_muelle = '" + muelle.getIdMuelle() + "';";
-        actualizar(sql);
-    }
-
-    /**
      * Metodo encargado de eliminar una operacion
      * @param operacion a eliminar
      * @throws BbddException error controlado
      */
     public void eliminar(Operacion operacion) throws BbddException {
         String sql = "DELETE FROM operacion WHERE id_lista_productos = '" + operacion.getIdListaProductos() + "';";
-        actualizar(sql);
-    }
-    
-    /**
-     * Metodo encargado de eliminar un productoEstanteria
-     * @param productoEstanteria a eliminar
-     * @throws BbddException error controlado
-     */
-    public void eliminar(ProductoEstanteria productoEstanteria) throws BbddException {
-        String sql = "DELETE FROM producto_estanteria WHERE id_producto = '" + productoEstanteria.getIdProducto()
-                + "AND id_estanteria = '" + productoEstanteria.getIdEstanteria() + "';";
         actualizar(sql);
     }
 
@@ -338,17 +358,6 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de realizar la modificacion de una estanteria
-     * @param estanteria a modificar
-     * @throws BbddException error controlado
-     */
-    public void modificar(Estanteria estanteria) throws BbddException {
-        String sql = "UPDATE estanteria SET id_zona = '" + estanteria.getIdZona() + "'," + " num_alturas = '"
-                + estanteria.getNumAlturas() + "'" + " WHERE id_estanteria = '" + estanteria.getIdEstanteria() + "';";
-        actualizar(sql);
-    }
-
-    /**
      * Metodo encargado de realizar la modificacion de una zona
      * @param zona a modificar
      * @throws BbddException error controlado
@@ -360,6 +369,29 @@ public class Bbdd {
     }
 
     /**
+     * Metodo encargado de realizar la modificacion de una estanteria
+     * @param estanteria a modificar
+     * @throws BbddException error controlado
+     */
+    public void modificar(Estanteria estanteria) throws BbddException {
+        String sql = "UPDATE estanteria SET id_zona = '" + estanteria.getIdZona() + "'," + " num_alturas = '"
+                + estanteria.getNumAlturas() + "'" + " WHERE id_estanteria = '" + estanteria.getIdEstanteria() + "';";
+        actualizar(sql);
+    }
+    
+    /**
+     * Metodo encargado de realizar la modificacion de un productoEstanteria
+     * @param productoEstanteria a modificar
+     * @throws BbddException error controlado
+     */
+    public void modificar(ProductoEstanteria productoEstanteria) throws BbddException {
+        String sql = "UPDATE producto_estanteria SET cantidad = '" + productoEstanteria.getCantidad()
+                + "' WHERE id_producto = '" + productoEstanteria.getIdProducto() + "AND id_estanteria = '"
+                + productoEstanteria.getIdEstanteria() + "';";
+        actualizar(sql);
+    }
+
+    /**
      * Metodo encargado de realizar la modificacion de una listaProducto
      * @param listaProducto a modificar
      * @throws BbddException error controlado
@@ -367,6 +399,17 @@ public class Bbdd {
     public void modificar(ListaProductos listaProducto) throws BbddException {
         eliminar(listaProducto);
         insertar(listaProducto);
+    }
+
+    /**
+     * Metodo encargado de realizar la modificacion de un muelle
+     * @param muelle a modificar
+     * @throws BbddException error controlado
+     */
+    public void modificar(Muelle muelle) throws BbddException {
+        String sql = "UPDATE muelle SET id_zona = '" + muelle.getIdZona() + "', disponible = '"
+                + (muelle.getDisponible() ? "true" : "false") + "', WHERE id_muelle = " + muelle.getIdMuelle() + "';";
+        actualizar(sql);
     }
 
     /**
@@ -404,17 +447,6 @@ public class Bbdd {
     }
 
     /**
-     * Metodo encargado de realizar la modificacion de un muelle
-     * @param muelle a modificar
-     * @throws BbddException error controlado
-     */
-    public void modificar(Muelle muelle) throws BbddException {
-        String sql = "UPDATE muelle SET id_zona = '" + muelle.getIdZona() + "', disponible = '"
-                + (muelle.getDisponible() ? "true" : "false") + "', WHERE id_muelle = " + muelle.getIdMuelle() + "';";
-        actualizar(sql);
-    }
-
-    /**
      * Metodo encargado de realizar la modificacion de una operacion
      * @param operacion a modificar
      * @throws BbddException error controlado
@@ -425,20 +457,6 @@ public class Bbdd {
                 + operacion.getCif() + "', WHERE id_lista_productos = " + operacion.getIdListaProductos() + "';";
         actualizar(sql);
     }
-
-    /**
-     * Metodo encargado de realizar la modificacion de un productoEstanteria
-     * @param productoEstanteria a modificar
-     * @throws BbddException error controlado
-     */
-    public void modificar(ProductoEstanteria productoEstanteria) throws BbddException {
-        String sql = "UPDATE producto_estanteria SET cantidad = '" + productoEstanteria.getCantidad()
-                + "' WHERE id_producto = '" + productoEstanteria.getIdProducto() + "AND id_estanteria = '"
-                + productoEstanteria.getIdEstanteria() + "';";
-        actualizar(sql);
-    }
-
-
 
     /**
      * Metodo encargado de realizar la actualizacion de la BBDD
@@ -523,6 +541,24 @@ public class Bbdd {
                     int numHuecosOcupados = resultSet.getInt("num_huecos_ocupados");
                     Estanteria estanteria = new Estanteria(idEstanteria, idZona, numAlturas, numHuecosOcupados);
                     listado.add(estanteria);
+                } else if (sql.contains(" producto_estanteria;")) {
+                    int idProducto = resultSet.getInt(ID_PRODUCTO);
+                    int idEstanteria = resultSet.getInt("id_estanteria");
+                    int cantidad = resultSet.getInt("cantidad");
+                    ProductoEstanteria productoEstanteria = new ProductoEstanteria(idProducto, idEstanteria, cantidad);
+                    listado.add(productoEstanteria);
+                 }else if (sql.contains(" lista_producto;")) {
+                    int idListaProductos = resultSet.getInt("id_lista_producto");
+                    String sqlString = "SELECT id_producto, cantidad FROM lista_producto WHERE id_lista_producto = " + idListaProductos + ";";
+                    HashMap<Integer, Integer> mapaListaProducto = obtenerHashMapListaProducto(sqlString);
+                    ListaProductos listaProductos = new ListaProductos(idListaProductos, mapaListaProducto);
+                    listado.add(listaProductos);
+                } else if (sql.contains(" muelle;")) {
+                    int idMuelle = resultSet.getInt("id_muelle");
+                    char idZona = resultSet.getString(ID_ZONA).charAt(0);
+                    boolean disponible = resultSet.getBoolean("disponible");
+                    Muelle muelle = new Muelle(idMuelle, idZona, disponible);
+                    listado.add(muelle);
                 } else if (sql.contains(" empresa;")) {
                     String cif = resultSet.getString("cif");
                     String nombre = resultSet.getString("nombre");
@@ -531,23 +567,17 @@ public class Bbdd {
                     String correo = resultSet.getString("correo");
                     Empresa empresa = new Empresa(cif, nombre, direccion, telefono, correo);
                     listado.add(empresa);
-                } else if (sql.contains(" proveedor;")) {
-                    String cif = resultSet.getString("cif");
-                    String tipoProducto = resultSet.getString("tipo_producto");
-                    Proveedor proveedor = new Proveedor(cif, tipoProducto);
-                    listado.add(proveedor);
                 } else if (sql.contains(" cliente;")) {
                     String cif = resultSet.getString("cif");
                     float porcentajeDesc = resultSet.getFloat("porcentaje_desc");
                     Cliente cliente = new Cliente(cif, porcentajeDesc);
                     listado.add(cliente);
-                } else if (sql.contains(" producto_estanteria;")) {
-                    String idProducto = resultSet.getString(ID_PRODUCTO);
-                    String idEstanteria = resultSet.getString("id_estanteria");
-                    int cantidad = resultSet.getInt("cantidad");
-                    ProductoEstanteria productoEstanteria = new ProductoEstanteria(idProducto, idEstanteria, cantidad);
-                    listado.add(productoEstanteria);
-                } else if (sql.contains(" operacion;")) {
+                } else if (sql.contains(" proveedor;")) {
+                    String cif = resultSet.getString("cif");
+                    String tipoProducto = resultSet.getString("tipo_producto");
+                    Proveedor proveedor = new Proveedor(cif, tipoProducto);
+                    listado.add(proveedor);
+                }  else if (sql.contains(" operacion;")) {
                     int idListaProductos = resultSet.getInt("id_lista_productos");
                     int idMuelle = resultSet.getInt("id_muelle");
                     String fecha = resultSet.getString("fecha");
@@ -555,18 +585,6 @@ public class Bbdd {
                     String cif = resultSet.getString("cif");
                     Operacion operacion = new Operacion(idListaProductos, idMuelle, fecha, tipoOperacion, cif);
                     listado.add(operacion);
-                } else if (sql.contains(" muelle;")) {
-                    int idMuelle = resultSet.getInt("id_muelle");
-                    char idZona = resultSet.getString(ID_ZONA).charAt(0);
-                    boolean disponible = resultSet.getBoolean("disponible");
-                    Muelle muelle = new Muelle(idMuelle, idZona, disponible);
-                    listado.add(muelle);
-                } else if (sql.contains(" lista_producto;")) {
-                    int idListaProductos = resultSet.getInt("id_lista_producto");
-                    String sqlString = "SELECT id_producto, cantidad FROM lista_producto WHERE id_lista_producto = " + idListaProductos + ";";
-                    HashMap<Integer, Integer> mapaListaProducto = obtenerHashMapListaProducto(sqlString);
-                    ListaProductos listaProductos = new ListaProductos(idListaProductos, mapaListaProducto);
-                    listado.add(listaProductos);
                 }
             }
         } catch (Exception exception) {
@@ -586,6 +604,7 @@ public class Bbdd {
         String sql = "SELECT * FROM producto;";
         return (ArrayList<Producto>) (ArrayList<?>) obtenerListados(sql);
     }
+
     /**
      * Funcion que obtiene el listado de todas las zonas
      * @return lista
@@ -595,6 +614,7 @@ public class Bbdd {
         String sql = "SELECT * FROM zona;";
         return (ArrayList<Zona>) (ArrayList<?>) obtenerListados(sql);
     }
+
     /**
      * Funcion que obtiene el listado de todas las estanterias
      * @return lista
@@ -604,60 +624,7 @@ public class Bbdd {
         String sql = "SELECT * FROM estanteria;";
         return (ArrayList<Estanteria>) (ArrayList<?>) obtenerListados(sql);
     }
-    /**
-     * Funcion que obtiene el listado de todas las empresas
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<Empresa> obtenerListadoEmpresa() throws BbddException {
-        String sql = "SELECT * FROM empresa;";
-        return (ArrayList<Empresa>) (ArrayList<?>) obtenerListados(sql);
-    }
-    /**
-     * Funcion que obtiene el listado de todos los clientes
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
-        String sql = "SELECT * FROM cliente;";
-        return (ArrayList<Cliente>) (ArrayList<?>) obtenerListados(sql);
-    }
-    /**
-     * Funcion que obtiene el listado de todos los proveedores
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<Proveedor> obtenerListadoProveedor() throws BbddException {
-        String sql = "SELECT * FROM proveedor;";
-        return (ArrayList<Proveedor>) (ArrayList<?>) obtenerListados(sql);
-    }
-    /**
-     * Funcion que obtiene el listado de todas las listaProducto
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<ListaProductos> obtenerListadoListaProducto() throws BbddException {
-        String sql = "SELECT DISTINCT id_lista_producto FROM lista_producto;";
-        return (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
-    }
-    /**
-     * Funcion que obtiene el listado de todos los muelles
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<Muelle> obtenerListadoMuelle() throws BbddException {
-        String sql = "SELECT *  FROM muelle;";
-        return (ArrayList<Muelle>) (ArrayList<?>) obtenerListados(sql);
-    }
-    /**
-     * Funcion que obtiene el listado de todos las operaciones
-     * @return lista
-     * @throws BbddException controlado
-     */
-    public ArrayList<Operacion> obtenerListadoOperacion() throws BbddException {
-        String sql = "SELECT *  FROM operacion;";
-        return (ArrayList<Operacion>) (ArrayList<?>) obtenerListados(sql);
-    }
+    
     /**
      * Funcion que obtiene el listado de todos los productosEstanteria
      * @return lista
@@ -667,6 +634,68 @@ public class Bbdd {
         String sql = "SELECT *  FROM producto_estanteria;";
         return (ArrayList<ProductoEstanteria>) (ArrayList<?>) obtenerListados(sql);
     }
+
+    /**
+     * Funcion que obtiene el listado de todas las listaProducto
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<ListaProductos> obtenerListadoListaProducto() throws BbddException {
+        String sql = "SELECT DISTINCT id_lista_producto FROM lista_producto;";
+        return (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
+    }
+
+    /**
+     * Funcion que obtiene el listado de todos los muelles
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<Muelle> obtenerListadoMuelle() throws BbddException {
+        String sql = "SELECT *  FROM muelle;";
+        return (ArrayList<Muelle>) (ArrayList<?>) obtenerListados(sql);
+    }
+
+    /**
+     * Funcion que obtiene el listado de todas las empresas
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<Empresa> obtenerListadoEmpresa() throws BbddException {
+        String sql = "SELECT * FROM empresa;";
+        return (ArrayList<Empresa>) (ArrayList<?>) obtenerListados(sql);
+    }
+
+    /**
+     * Funcion que obtiene el listado de todos los clientes
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
+        String sql = "SELECT * FROM cliente;";
+        return (ArrayList<Cliente>) (ArrayList<?>) obtenerListados(sql);
+    }
+
+    /**
+     * Funcion que obtiene el listado de todos los proveedores
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<Proveedor> obtenerListadoProveedor() throws BbddException {
+        String sql = "SELECT * FROM proveedor;";
+        return (ArrayList<Proveedor>) (ArrayList<?>) obtenerListados(sql);
+    }
+    
+    /**
+     * Funcion que obtiene el listado de todos las operaciones
+     * @return lista
+     * @throws BbddException controlado
+     */
+    public ArrayList<Operacion> obtenerListadoOperacion() throws BbddException {
+        String sql = "SELECT *  FROM operacion;";
+        return (ArrayList<Operacion>) (ArrayList<?>) obtenerListados(sql);
+    }
+    
+
 
     /**
      * Funcion que obtiene un producto
@@ -684,38 +713,24 @@ public class Bbdd {
         }
         return producto;
     }
+
     /**
-     * Funcion que obtiene un cliente
-     * @param cif identificador del cliente
-     * @return cliente encontrado
+     * Funcion que obtiene una zona
+     * @param idZona identificador de la zona
+     * @return zona encontrada
      * @throws BbddException controlado
      */
-    public Cliente obtenerCliente(String cif) throws BbddException {
-        Cliente cliente = null;
-        ArrayList<Cliente> lista = null;
-        String sql = "SELECT * FROM cliente WHERE cif = '" + cif + "';";
-        lista = (ArrayList<Cliente>) (ArrayList<?>) obtenerListados(sql);
+    public Zona obtenerZona(char idZona) throws BbddException {
+        Zona zona = null;
+        ArrayList<Zona> lista = null;
+        String sql = "SELECT * FROM producto WHERE id_producto = '" + idZona + "';";
+        lista = (ArrayList<Zona>) (ArrayList<?>) obtenerListados(sql);
         if (!lista.isEmpty()) {
-            cliente = lista.get(0);
+            zona = lista.get(0);
         }
-        return cliente;
+        return zona;
     }
-    /**
-     * Funcion que obtiene una empresa
-     * @param cif identificador de la empresa
-     * @return empresa encontrada
-     * @throws BbddException controlado
-     */
-    public Empresa obtenerEmpresa(String cif) throws BbddException {
-        Empresa empresa = null;
-        ArrayList<Empresa> lista = null;
-        String sql = "SELECT * FROM empresa WHERE cif = '" + cif + "';";
-        lista = (ArrayList<Empresa>) (ArrayList<?>) obtenerListados(sql);
-        if (!lista.isEmpty()) {
-            empresa = lista.get(0);
-        }
-        return empresa;
-    }
+
     /**
      * Funcion que obtiene una estanteria
      * @param idEstanteria identificador de la estanteria
@@ -732,54 +747,7 @@ public class Bbdd {
         }
         return estanteria;
     }
-    /**
-     * Funcion que obtiene una listaProductos
-     * @param idListaProductos identificador de la listaProductos
-     * @return listaProductos encontrada
-     * @throws BbddException controlado
-     */
-    public ListaProductos obtenerListaProductos(int idListaProductos) throws BbddException {
-        ListaProductos listaProductos = null;
-        ArrayList<ListaProductos> lista = null;
-        String sql = "SELECT * FROM lista_productos WHERE id_lista_producto = " + idListaProductos + ";";
-        lista = (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
-        if (!lista.isEmpty()) {
-            listaProductos = lista.get(0);
-        }
-        return listaProductos;
-    }
-    /**
-     * Funcion que obtiene un muelle
-     * @param idMuelle identificador del muelle
-     * @return muelle encontrado
-     * @throws BbddException controlado
-     */
-    public Muelle obtenerMuelle(int idMuelle) throws BbddException {
-        Muelle muelle = null;
-        ArrayList<Muelle> lista = null;
-        String sql = "SELECT * FROM muelle WHERE id_muelle = " + idMuelle + ";";
-        lista = (ArrayList<Muelle>) (ArrayList<?>) obtenerListados(sql);
-        if (!lista.isEmpty()) {
-            muelle = lista.get(0);
-        }
-        return muelle;
-    }
-    /**
-     * Funcion que obtiene una operacion
-     * @param idListaProductos identificador de la operacion
-     * @return operacion encontrada
-     * @throws BbddException controlado
-     */
-    public Operacion obtenerOperacion(int idListaProductos) throws BbddException {
-        Operacion producto = null;
-        ArrayList<Operacion> listaProducto = null;
-        String sql = "SELECT * FROM operacion WHERE id_lista_productos = " + idListaProductos + ";";
-        listaProducto = (ArrayList<Operacion>) (ArrayList<?>) obtenerListados(sql);
-        if (!listaProducto.isEmpty()) {
-            producto = listaProducto.get(0);
-        }
-        return producto;
-    }
+
     /**
      * Funcion que obtiene un productoEstanteria
      * @param idProducto identificador del productoEstanteria
@@ -797,6 +765,75 @@ public class Bbdd {
         }
         return productoEstanteria;
     }
+
+    /**
+     * Funcion que obtiene una listaProductos
+     * @param idListaProductos identificador de la listaProductos
+     * @return listaProductos encontrada
+     * @throws BbddException controlado
+     */
+    public ListaProductos obtenerListaProductos(int idListaProductos) throws BbddException {
+        ListaProductos listaProductos = null;
+        ArrayList<ListaProductos> lista = null;
+        String sql = "SELECT * FROM lista_productos WHERE id_lista_producto = " + idListaProductos + ";";
+        lista = (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
+        if (!lista.isEmpty()) {
+            listaProductos = lista.get(0);
+        }
+        return listaProductos;
+    }
+
+    /**
+     * Funcion que obtiene un muelle
+     * @param idMuelle identificador del muelle
+     * @return muelle encontrado
+     * @throws BbddException controlado
+     */
+    public Muelle obtenerMuelle(int idMuelle) throws BbddException {
+        Muelle muelle = null;
+        ArrayList<Muelle> lista = null;
+        String sql = "SELECT * FROM muelle WHERE id_muelle = " + idMuelle + ";";
+        lista = (ArrayList<Muelle>) (ArrayList<?>) obtenerListados(sql);
+        if (!lista.isEmpty()) {
+            muelle = lista.get(0);
+        }
+        return muelle;
+    }
+
+    /**
+     * Funcion que obtiene una empresa
+     * @param cif identificador de la empresa
+     * @return empresa encontrada
+     * @throws BbddException controlado
+     */
+    public Empresa obtenerEmpresa(String cif) throws BbddException {
+        Empresa empresa = null;
+        ArrayList<Empresa> lista = null;
+        String sql = "SELECT * FROM empresa WHERE cif = '" + cif + "';";
+        lista = (ArrayList<Empresa>) (ArrayList<?>) obtenerListados(sql);
+        if (!lista.isEmpty()) {
+            empresa = lista.get(0);
+        }
+        return empresa;
+    }
+
+    /**
+     * Funcion que obtiene un cliente
+     * @param cif identificador del cliente
+     * @return cliente encontrado
+     * @throws BbddException controlado
+     */
+    public Cliente obtenerCliente(String cif) throws BbddException {
+        Cliente cliente = null;
+        ArrayList<Cliente> lista = null;
+        String sql = "SELECT * FROM cliente WHERE cif = '" + cif + "';";
+        lista = (ArrayList<Cliente>) (ArrayList<?>) obtenerListados(sql);
+        if (!lista.isEmpty()) {
+            cliente = lista.get(0);
+        }
+        return cliente;
+    }
+
     /**
      * Funcion que obtiene un proveedor
      * @param cif identificador del proveedor
@@ -813,44 +850,21 @@ public class Bbdd {
         }
         return proveedor;
     }
+    
     /**
-     * Funcion que obtiene una zona
-     * @param idZona identificador de la zona
-     * @return zona encontrada
+     * Funcion que obtiene una operacion
+     * @param idListaProductos identificador de la operacion
+     * @return operacion encontrada
      * @throws BbddException controlado
      */
-    public Zona obtenerProducto(char idZona) throws BbddException {
-        Zona zona = null;
-        ArrayList<Zona> lista = null;
-        String sql = "SELECT * FROM producto WHERE id_producto = '" + idZona + "';";
-        lista = (ArrayList<Zona>) (ArrayList<?>) obtenerListados(sql);
-        if (!lista.isEmpty()) {
-            zona = lista.get(0);
+    public Operacion obtenerOperacion(int idListaProductos) throws BbddException {
+        Operacion producto = null;
+        ArrayList<Operacion> listaProducto = null;
+        String sql = "SELECT * FROM operacion WHERE id_lista_productos = " + idListaProductos + ";";
+        listaProducto = (ArrayList<Operacion>) (ArrayList<?>) obtenerListados(sql);
+        if (!listaProducto.isEmpty()) {
+            producto = listaProducto.get(0);
         }
-        return zona;
-    }
-
-    /**
-     * Metodo que cierra las conexiciones con la base de datos
-     * @param connection
-     * @param statement
-     * @param resultSet
-     * @throws BbddException
-     */
-    private void closeConnection(Connection connection, Statement statement, ResultSet resultSet) throws BbddException {
-        try {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (Exception exception) {
-            throw new BbddException("Se ha producido un error cerrando la coneccion", exception);
-        }
-
+        return producto;
     }
 }
