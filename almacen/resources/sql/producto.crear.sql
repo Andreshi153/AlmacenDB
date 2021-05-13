@@ -1,6 +1,6 @@
 CREATE TABLE producto (
-    id_producto INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_producto INT GENERATED ALWAYS AS IDENTITY(Start with 1, Increment by 1) PRIMARY KEY,
     nombre VARCHAR(75),
     precio_unitario DECIMAL(6, 2),
-    tipo ENUM('Normal', 'Frio', 'Congelados')
-);
+    tipo VARCHAR(15)
+)

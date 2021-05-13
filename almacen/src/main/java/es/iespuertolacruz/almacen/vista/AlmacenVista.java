@@ -2,8 +2,14 @@ package es.iespuertolacruz.almacen.vista;
 
 import java.util.Scanner;
 
+import es.iespuertolacruz.almacen.api.*;
+import es.iespuertolacruz.almacen.controlador.AlmacenController;
+import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
+
 public class AlmacenVista {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BbddException, FicheroException {
+        AlmacenController almacenController = new AlmacenController();
         boolean salir = false;
         while(!salir) {
             int opcion = 0;
@@ -17,11 +23,15 @@ public class AlmacenVista {
                     switch(opcion) {
                         case 1:
                             //leer idProducto
+                            int idProducto = scanner.nextInt();
+                            Producto producto = almacenController.obtenerProducto(idProducto);
                             //mostrar producto.toString()
+                            System.out.println(producto.toString());
                             break;
                         case 2:
                             //leer nombre, precio y tipo
                             //insertar producto
+                            System.out.println(almacenController.test());
                             break;
                         case 3:
                             //leer idProducto

@@ -1,19 +1,24 @@
 package es.iespuertolacruz.almacen.modelo;
 
+import java.util.ArrayList;
+
 import es.iespuertolacruz.almacen.api.*;
 import es.iespuertolacruz.almacen.exception.BbddException;
 import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class AlmacenModelo {
     
-    //DerbyBbdd persistencia;
-    MySqlBbdd persistencia;
+    DerbyBbdd persistencia;
+    //MySqlBbdd persistencia;
 
     public AlmacenModelo() throws BbddException, FicheroException {
-        //persistencia = new DerbyBbdd(null, null);
-        persistencia = new MySqlBbdd(null, null);
+        persistencia = new DerbyBbdd(null, null);
+        //persistencia = new MySqlBbdd(null, null);
     }
 
+    public String test() throws BbddException {
+        return persistencia.obtenerListadoProducto().toString();
+    }
     //CRUD producto
 
     /**

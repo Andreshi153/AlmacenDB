@@ -183,6 +183,7 @@ INSERT INTO zona (id_zona, tipo) values('E', 'Zona de picking');
 INSERT INTO zona (id_zona, tipo) values('F', 'Normal');
 
 -- Estanteria
+-- Procedimiento para generar estanterias
 DROP PROCEDURE IF EXISTS pa_insert_estanterias;
 DELIMITER //
 CREATE PROCEDURE pa_insert_estanterias(IN num_estanterias INT, IN zona_estanteria CHAR)
@@ -207,11 +208,16 @@ DELIMITER //
 CREATE TRIGGER after_producto_estanteria_insert
     AFTER INSERT ON producto_estanteria FOR EACH ROW
 BEGIN
-    UPDATE estanteria SET num_huecos_ocupados = (SELECT COUNT(*) FROM producto_estanteria WHERE estanteria.id_estanteria = producto_estanteria.id_estanteria) WHERE new.id_estanteria = estanteria.id_estanteria;
+    UPDATE estanteria SET num_huecos_ocupados = (SELECT COUNT(*) FROM producto_estanteria 
+    WHERE estanteria.id_estanteria = producto_estanteria.id_estanteria) 
+    WHERE new.id_estanteria = estanteria.id_estanteria;
 END //
 DELIMITER ;
 
 -- Trigger de la cantidad de productos
+/* 
+TODO: Documentar
+*/
 DROP TRIGGER IF EXISTS after_operacion_cantidad;
 DELIMITER //
 CREATE TRIGGER after_operacion_cantidad
@@ -226,7 +232,9 @@ BEGIN
     SET @rowCount = (SELECT COUNT(*) FROM producto);
     WHILE (@fila <= @rowCount) DO
         IF ((SELECT id_producto FROM lista_productos NATURAL JOIN operacion WHERE id_producto = @fila) = @fila) THEN
-            UPDATE producto_estanteria SET cantidad = cantidad + (@operador * (SELECT cantidad FROM lista_productos WHERE new.id_lista_productos = lista_productos.id_lista_productos AND id_producto = @fila)) WHERE id_producto = @fila;
+            UPDATE producto_estanteria SET cantidad = cantidad + (@operador * (SELECT cantidad FROM lista_productos 
+            WHERE new.id_lista_productos = lista_productos.id_lista_productos AND id_producto = @fila)) 
+            WHERE id_producto = @fila;
         END IF;
         SET @fila = @fila + 1;
     END WHILE;
@@ -234,6 +242,9 @@ END //
 DELIMITER ;
 
 -- Producto estanteria
+/*
+TODO: INSERCIONES
+*/
 INSERT INTO producto_estanteria VALUES (1, 1, 400);
 INSERT INTO producto_estanteria VALUES (2, 3, 200);
 
@@ -345,6 +356,7 @@ INSERT INTO operacion (id_lista_productos, id_muelle, fecha, tipo_operacion, cif
 
 -- Creacion de vistas
 DROP VIEW IF EXISTS vista_producto_lista, vista_proveedor, vista_cliente;
-CREATE VIEW vista_producto_lista AS SELECT id_lista_productos AS 'ID lista productos', id_producto AS 'ID producto', nombre, cantidad, tipo FROM producto NATURAL JOIN lista_productos;
+CREATE VIEW vista_producto_lista AS SELECT id_lista_productos AS 'ID lista productos', id_producto AS 'ID producto', 
+        nombre, cantidad, tipo FROM producto NATURAL JOIN lista_productos;
 CREATE VIEW vista_proveedor AS SELECT * FROM empresa NATURAL JOIN proveedor;
 CREATE VIEW vista_cliente AS SELECT * FROM empresa NATURAL JOIN cliente;
