@@ -6,6 +6,9 @@ public class ListaProductos {
     int idListaProductos;
     HashMap<Integer, Integer> lista;
 
+    public ListaProductos() {
+        this.idListaProductos = 20000;
+    }
 
     public ListaProductos(int idListaProductos, HashMap<Integer, Integer> lista) {
         this.idListaProductos = idListaProductos;
@@ -17,6 +20,10 @@ public class ListaProductos {
     }
     public HashMap<Integer, Integer> getLista() {
         return this.lista;
+    }
+
+    public void setLista(HashMap<Integer, Integer> lista) {
+        this.lista = lista;
     }
 
 }

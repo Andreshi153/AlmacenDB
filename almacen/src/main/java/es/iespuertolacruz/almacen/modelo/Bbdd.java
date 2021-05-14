@@ -3,7 +3,9 @@ package es.iespuertolacruz.almacen.modelo;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +42,7 @@ public class Bbdd {
 
     ArrayList<String> listaTablas;
 
-    public Bbdd(String driver, String url, String usuario, String password) throws BbddException, FicheroException {
+    public Bbdd(String driver, String url, String usuario, String password) throws BbddException, FicheroException, SQLException {
         this.driver = driver;
         this.url = url;
         this.usuario = usuario;
@@ -50,18 +52,32 @@ public class Bbdd {
             String[] nombresTablas = "producto,zona,estanteria,producto_estanteria,lista_productos,muelle,empresa,cliente,proveedor,operacion".split(",");
             Collections.addAll(listaTablas, nombresTablas);
         }
-        init();
+        init(driver);
     }
 
-    private void init() throws BbddException, FicheroException {
+    private void init(String driver) throws BbddException, FicheroException, SQLException {
+        crearBBDD();
+        String carpeta = driver.contains("derby") ? "derby" : "mysql"; 
         for (String tabla : listaTablas) {
             if(!existeTabla(tabla)) {
-                String crearTabla = new Fichero().leer("resources/sql/"+tabla+".crear.sql");
+                String crearTabla = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".crear.sql");
                 System.out.println(tabla);
                 actualizar(crearTabla);
-                String insertElemento = new Fichero().leer("resources/sql/"+tabla+".insertar.sql");
+                String insertElemento = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".insertar.sql");
                 actualizar(insertElemento);
             }
+        }
+    }
+
+    private void crearBBDD() throws BbddException, SQLException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS almacen");
+            ps.executeUpdate();
+        } finally {
+            closeConnection(connection, ps, null);
         }
     }
 
@@ -97,7 +113,7 @@ public class Bbdd {
         Connection connection = null;
 
         try {
-            //Class.forName(driver);
+            Class.forName(driver);
             if (usuario == null || password == null) {
                 connection = DriverManager.getConnection(url);
             } else {

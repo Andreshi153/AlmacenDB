@@ -1,5 +1,8 @@
 package es.iespuertolacruz.almacen.controlador;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import es.iespuertolacruz.almacen.api.*;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
@@ -11,7 +14,7 @@ public class AlmacenController {
     private static final String EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z = "El id de la zona debe estar entre la A y la Z\n";
     AlmacenModelo almacenModelo;
 
-    public AlmacenController() throws BbddException, FicheroException {
+    public AlmacenController() throws BbddException, FicheroException, SQLException {
         almacenModelo = new AlmacenModelo();
     }
 
@@ -539,6 +542,14 @@ public class AlmacenController {
     public Cliente obtenerCliente(String cif) throws BbddException {
         return almacenModelo.obtenerCliente(cif);
     }
+    /**
+     * Funcion que devuelve el listado de clientes
+     * @return arraylist de clientes
+     * @throws BbddException
+     */
+    public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
+        return almacenModelo.obtenerListadoCliente();
+    }
     
     //CRUD proveedor
     /**
@@ -578,6 +589,14 @@ public class AlmacenController {
      */
     public Proveedor obtenerProveedor(String cif) throws BbddException {
         return almacenModelo.obtenerProveedor(cif);
+    }
+    /**
+     * Funcion que devuelve el listado de proveedores
+     * @return arraylist de proveedores
+     * @throws BbddException controlado
+     */
+    public ArrayList<Proveedor> obtenerListadoProveedor() throws BbddException {
+        return almacenModelo.obtenerListadoProveedor();
     }
 
     //CRUD operacion

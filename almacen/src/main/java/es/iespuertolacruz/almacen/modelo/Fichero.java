@@ -10,7 +10,7 @@ public class Fichero {
     private static final String RETORNO_CARRO = "\n";
 
     /**
-     * Funcion encargada de leer un ficher
+     * Funcion encargada de leer un fichero
      * 
      * @param nombre nombre del fichero a leer
      * @throws FicheroException Error controlado en la lectura del fichero

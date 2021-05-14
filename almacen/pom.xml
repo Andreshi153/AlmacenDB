@@ -50,8 +50,8 @@
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.15.2.0</version>
+      <scope>test</scope>
     </dependency>
-
 
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
@@ -116,18 +116,6 @@
           </rules>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.cayenne.plugins</groupId>
-        <artifactId>maven-cayenne-plugin</artifactId>
-        <version>3.2M1</version>
-        <dependencies>
-           <dependency>
-             <groupId>org.apache.derby</groupId>
-             <artifactId>derbyclient</artifactId>
-             <version>10.10.1.1</version>
-           </dependency>
-        </dependencies>
-     </plugin>
     </plugins>
   </build>
 </project>

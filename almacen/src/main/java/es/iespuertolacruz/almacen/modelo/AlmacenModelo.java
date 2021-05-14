@@ -1,5 +1,6 @@
 package es.iespuertolacruz.almacen.modelo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import es.iespuertolacruz.almacen.api.*;
@@ -8,12 +9,12 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class AlmacenModelo {
     
-    DerbyBbdd persistencia;
-    //MySqlBbdd persistencia;
+    //DerbyBbdd persistencia;
+    MySqlBbdd persistencia;
 
-    public AlmacenModelo() throws BbddException, FicheroException {
-        persistencia = new DerbyBbdd(null, null);
-        //persistencia = new MySqlBbdd(null, null);
+    public AlmacenModelo() throws BbddException, FicheroException, SQLException {
+        //persistencia = new DerbyBbdd(null, null);
+        persistencia = new MySqlBbdd("root", null);
     }
 
     public String test() throws BbddException {
@@ -46,7 +47,7 @@ public class AlmacenModelo {
         persistencia.modificar(producto);
     }
     /**
-     * Metodo que busca un producto en la bbdd
+     * Funcion que busca un producto en la bbdd
      * @param idProducto del producto a buscar
      * @throws BbddException controlado
      */
@@ -81,7 +82,7 @@ public class AlmacenModelo {
         persistencia.modificar(zona);
     }
     /**
-     * Metodo que busca una zona en la bbdd
+     * Funcion que busca una zona en la bbdd
      * @param idZona de la zona a buscar
      * @throws BbddException controlado
      */
@@ -115,7 +116,7 @@ public class AlmacenModelo {
         persistencia.modificar(estanteria);
     }
     /**
-     * Metodo que busca una estanteria en la bbdd
+     * Funcion que busca una estanteria en la bbdd
      * @param idEstanteria de la estanteria a buscar
      * @throws BbddException controlado
      */
@@ -149,7 +150,7 @@ public class AlmacenModelo {
         persistencia.modificar(productoEstanteria);
     }
     /**
-     * Metodo que busca un productoEstanteria en la bbdd
+     * Funcion que busca un productoEstanteria en la bbdd
      * @param idProducto del productoEstanteria a buscar
      * @param idEstanteria del productoEstanteria a buscar
      * @throws BbddException controlado
@@ -185,7 +186,7 @@ public class AlmacenModelo {
         persistencia.modificar(listaProductos);
     }
     /**
-     * Metodo que busca una listaProductos en la bbdd
+     * Funcion que busca una listaProductos en la bbdd
      * @param idListaProductos de la listaProductos a buscar
      * @throws BbddException controlado
      */
@@ -219,7 +220,7 @@ public class AlmacenModelo {
         persistencia.modificar(muelle);
     }
     /**
-     * Metodo que busca un muelle en la bbdd
+     * Funcion que busca un muelle en la bbdd
      * @param idMuelle del muelle a buscar
      * @throws BbddException controlado
      */
@@ -253,7 +254,7 @@ public class AlmacenModelo {
         persistencia.modificar(empresa);
     }
     /**
-     * Metodo que busca una empresa en la bbdd
+     * Funcion que busca una empresa en la bbdd
      * @param cif de la empresa a buscar
      * @throws BbddException controlado
      */
@@ -287,12 +288,21 @@ public class AlmacenModelo {
         persistencia.modificar(cliente);
     }
     /**
-     * Metodo que busca un cliente en la bbdd
+     * Funcion que busca un cliente en la bbdd
      * @param cif del cliente a buscar
      * @throws BbddException controlado
      */
     public Cliente obtenerCliente(String cif) throws BbddException {
         return persistencia.obtenerCliente(cif);
+    }
+
+    /**
+     * Funcion que devuelve el listado de clientes
+     * @return arraylist de clientes
+     * @throws BbddException
+     */
+    public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
+        return persistencia.obtenerListadoCliente();
     }
     
     //CRUD proveedor
@@ -321,12 +331,20 @@ public class AlmacenModelo {
         persistencia.modificar(proveedor);
     }
     /**
-     * Metodo que busca un proveedor en la bbdd
+     * Funcion que busca un proveedor en la bbdd
      * @param cif del proveedor a buscar
      * @throws BbddException controlado
      */
     public Proveedor obtenerProveedor(String cif) throws BbddException {
         return persistencia.obtenerProveedor(cif);
+    }
+    /**
+     * Funcion que devuelve el listado de proveedores
+     * @return arraylist de proveedores
+     * @throws BbddException controlado
+     */
+    public ArrayList<Proveedor> obtenerListadoProveedor() throws BbddException {
+        return persistencia.obtenerListadoProveedor();
     }
 
     //CRUD operacion
@@ -356,7 +374,7 @@ public class AlmacenModelo {
         persistencia.modificar(operacion);
     }
     /**
-     * Metodo que busca una operacion en la bbdd
+     * Funcion que busca una operacion en la bbdd
      * @param idListaProductos de la operacion a buscar
      * @throws BbddException controlado
      */
