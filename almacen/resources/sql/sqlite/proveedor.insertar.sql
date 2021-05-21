@@ -1,0 +1,12 @@
+INSERT INTO proveedor VALUES ('A11111111', 'Normal');
+INSERT INTO proveedor VALUES ('A22222222', 'Congelados');
+INSERT INTO proveedor VALUES ('A44444444', 'Normal');
+INSERT INTO proveedor VALUES ('B11111111', 'Frio');
+INSERT INTO proveedor VALUES ('B22222222', 'Normal');
+INSERT INTO proveedor VALUES ('B33333333', 'Normal');
+INSERT INTO proveedor VALUES ('B44444444', 'Normal');
+INSERT INTO proveedor VALUES ('B55555555', 'Frio');
+INSERT INTO proveedor VALUES ('B66666666', 'Normal');
+INSERT INTO proveedor VALUES ('B77777777', 'Normal');
+INSERT INTO proveedor VALUES ('B88888888', 'Congelados');
+INSERT INTO proveedor VALUES ('B99999999', 'Frio');

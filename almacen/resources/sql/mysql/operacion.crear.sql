@@ -1,6 +1,6 @@
 CREATE TABLE operacion (
     id_lista_productos INT PRIMARY KEY,
-    id_muelle INT,
+    id_muelle INT UNSIGNED,
     fecha DATE,
     tipo_operacion ENUM('Entrada','Salida'),
     cif VARCHAR(9),

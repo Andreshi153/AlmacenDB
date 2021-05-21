@@ -9,17 +9,19 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class AlmacenModelo {
     
-    //DerbyBbdd persistencia;
-    MySqlBbdd persistencia;
+    SqLiteBbdd persistencia;
+    //MySqlBbdd persistencia;
 
-    public AlmacenModelo() throws BbddException, FicheroException, SQLException {
-        //persistencia = new DerbyBbdd(null, null);
-        persistencia = new MySqlBbdd("root", null);
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
+    public AlmacenModelo() throws BbddException, FicheroException {
+        persistencia = new SqLiteBbdd(null, null);
+        //persistencia = new MySqlBbdd("root", null);
     }
-
-    public String test() throws BbddException {
-        return persistencia.obtenerListadoProducto().toString();
-    }
+    
     //CRUD producto
 
     /**
@@ -53,6 +55,33 @@ public class AlmacenModelo {
      */
     public Producto obtenerProducto(int idProducto) throws BbddException {
         return persistencia.obtenerProducto(idProducto);
+    }
+
+    /**
+     * Funcion que devuelve el listado de los productos
+     * @return arraylist de productos
+     * @throws BbddException controlado
+     */
+    public ArrayList<Producto> obtenerListadoProducto() throws BbddException {
+        return persistencia.obtenerListadoProducto();
+    }
+
+    /**
+     * Funcion que calcula el valor total de todos los productos del almacen
+     * @return valor total de los productos
+     * @throws BbddException controlado
+     */
+    public double obtenerValorProductosTotal() throws BbddException {
+        return persistencia.obtenerValorProductosTotal();
+    }
+
+    /**
+     * Funcion que obtiene los huecos totales y los ocupados del almacen
+     * @return [huecos ocupados, huecos totales]
+     * @throws BbddException controlado
+     */
+    public Integer[] obtenerHuecosOcupados() throws BbddException {
+        return persistencia.obtenerHuecosOcupados();
     }
 
     //CRUD zona
@@ -299,7 +328,7 @@ public class AlmacenModelo {
     /**
      * Funcion que devuelve el listado de clientes
      * @return arraylist de clientes
-     * @throws BbddException
+     * @throws BbddException controlado
      */
     public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
         return persistencia.obtenerListadoCliente();

@@ -1,0 +1,2 @@
+INSERT INTO operacion (id_lista_productos, id_muelle, fecha, tipo_operacion, cif) VALUES (1, 3, '2020-11-14', 'Entrada', 'B66666666');
+INSERT INTO operacion (id_lista_productos, id_muelle, fecha, tipo_operacion, cif) VALUES (2, 15, '2021-02-15', 'Salida', 'C22222222')

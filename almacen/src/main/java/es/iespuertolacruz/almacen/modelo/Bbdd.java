@@ -3,9 +3,7 @@ package es.iespuertolacruz.almacen.modelo;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +40,16 @@ public class Bbdd {
 
     ArrayList<String> listaTablas;
 
-    public Bbdd(String driver, String url, String usuario, String password) throws BbddException, FicheroException, SQLException {
+    /**
+     * Constructor de la clase
+     * @param driver de la bbdd
+     * @param url de la bbdd
+     * @param usuario de la bbdd
+     * @param password de la bbdd
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
+    public Bbdd(String driver, String url, String usuario, String password) throws BbddException, FicheroException {
         this.driver = driver;
         this.url = url;
         this.usuario = usuario;
@@ -55,29 +62,34 @@ public class Bbdd {
         init(driver);
     }
 
-    private void init(String driver) throws BbddException, FicheroException, SQLException {
-        crearBBDD();
-        String carpeta = driver.contains("derby") ? "derby" : "mysql"; 
+    /**
+     * Metodo que carga las tablas e inserciones en la base de datos
+     * @param driver de la base de datos
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
+    private void init(String driver) throws BbddException, FicheroException {
+        String carpeta = driver.contains("sqlite") ? "sqlite" : "mysql";
         for (String tabla : listaTablas) {
             if(!existeTabla(tabla)) {
                 String crearTabla = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".crear.sql");
                 System.out.println(tabla);
                 actualizar(crearTabla);
                 String insertElemento = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".insertar.sql");
-                actualizar(insertElemento);
+                insertarElementos(insertElemento);
             }
         }
     }
 
-    private void crearBBDD() throws BbddException, SQLException {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = getConnection();
-            ps = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS almacen");
-            ps.executeUpdate();
-        } finally {
-            closeConnection(connection, ps, null);
+    /**
+     * Metodo que realiza las inserciones en las tablas
+     * @param cadena de texto que contiene las inserciones
+     * @throws BbddException controlado
+     */
+    private void insertarElementos(String cadena) throws BbddException {
+        String[] cadenaSeparada = cadena.split(";");
+        for(String sentencia : cadenaSeparada) {
+            actualizar(sentencia);
         }
     }
 
@@ -113,7 +125,7 @@ public class Bbdd {
         Connection connection = null;
 
         try {
-            Class.forName(driver);
+            //Class.forName(driver);
             if (usuario == null || password == null) {
                 connection = DriverManager.getConnection(url);
             } else {
@@ -200,11 +212,12 @@ public class Bbdd {
      */
     public void insertar(ListaProductos listaProductos) throws BbddException {
         HashMap<Integer, Integer> mapaListaProductos = listaProductos.getLista();
+        int idListaProductos = obtenerMaxIdListaProductos() + 1;
         StringBuilder sql = new StringBuilder();
         mapaListaProductos.forEach(
-                (producto, cantidad) -> sql.append("INSERT INTO lista_productos (id_lista_productos, id_zona, tipo)"
-                        + VALUES + listaProductos.getIdListaProductos() + "'," + producto + ", " + cantidad + ")"));
-        actualizar(sql.toString());
+                (producto, cantidad) -> sql.append("INSERT INTO lista_productos (id_lista_productos, id_producto, cantidad)"
+                        + VALUES + idListaProductos + "'," + producto + ", " + cantidad + ");"));
+        insertarElementos(sql.toString());
     }
 
     /**
@@ -310,7 +323,7 @@ public class Bbdd {
      * @throws BbddException error controlado
      */
     public void eliminar(ListaProductos listaProducto) throws BbddException {
-        String sql = "DELETE FROM listaProducto WHERE id_lista_productos = '" + listaProducto.getIdListaProductos()
+        String sql = "DELETE FROM lista_productos WHERE id_lista_productos = '" + listaProducto.getIdListaProductos()
                 + "'";
         actualizar(sql);
     }
@@ -527,6 +540,100 @@ public class Bbdd {
         }
         return listaProductos;
     }
+
+    /**
+     * Funcion que obtiene el id mas alto de listas de productos en la bbdd
+     * @return id mas alto
+     * @throws BbddException controlado
+     */
+    private int obtenerMaxIdListaProductos() throws BbddException {
+        String sql = "SELECT MAX(id_lista_productos) AS max_id FROM lista_productos";
+        int maxIdListaProductos = 0;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                maxIdListaProductos = resultSet.getInt("max_id");
+            }
+        } catch (Exception exception) {
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, exception);
+        } finally {
+            closeConnection(connection, statement, resultSet);
+        }
+        return maxIdListaProductos;
+    }
+
+    /**
+     * Funcion que calcula el valor total de todos los productos del almacen
+     * @return valor total de los productos
+     * @throws BbddException controlado
+     */
+    public double obtenerValorProductosTotal() throws BbddException {
+        String sql = "SELECT cantidad * precio_unitario AS valor_total FROM producto NATURAL JOIN producto_estanteria";
+        double valorTotal = 0;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                valorTotal += resultSet.getFloat("valor_total");
+            }
+        } catch (Exception exception) {
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, exception);
+        } finally {
+            closeConnection(connection, statement, resultSet);
+        }
+        return Math.floor(valorTotal*100)/100;
+    }
+
+    /**
+     * Funcion que obtiene los huecos totales y los ocupados del almacen
+     * @return [huecos ocupados, huecos totales]
+     * @throws BbddException controlado
+     */
+    public Integer[] obtenerHuecosOcupados() throws BbddException {
+        String sql = "SELECT COUNT(id_producto) AS num_huecos FROM producto_estanteria";
+        int numHuecos = 0;
+        int numEstanterias = 0;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                numHuecos = resultSet.getInt("num_huecos");
+            }
+        } catch (Exception exception) {
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, exception);
+        } finally {
+            closeConnection(connection, statement, resultSet);
+        }
+        sql = "SELECT SUM(num_alturas) AS num_alturas FROM estanteria";
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                numEstanterias = resultSet.getInt("num_alturas");
+            }
+        } catch (Exception exception) {
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, exception);
+        } finally {
+            closeConnection(connection, statement, resultSet);
+        }
+        Integer[] datos = {numHuecos, numEstanterias};
+        return datos;
+    }
+
     /**
      * Funcion que realiza la consulta sobre la BBDD
      * @param sql de la consulta
@@ -569,9 +676,9 @@ public class Bbdd {
                     int cantidad = resultSet.getInt("cantidad");
                     ProductoEstanteria productoEstanteria = new ProductoEstanteria(idProducto, idEstanteria, cantidad);
                     listado.add(productoEstanteria);
-                 }else if (sql.contains(" lista_producto ")) {
-                    int idListaProductos = resultSet.getInt("id_lista_producto");
-                    String sqlString = "SELECT id_producto, cantidad FROM lista_producto WHERE id_lista_producto = " + idListaProductos;
+                 }else if (sql.contains(" lista_productos ")) {
+                    int idListaProductos = resultSet.getInt("id_lista_productos");
+                    String sqlString = "SELECT id_producto, cantidad FROM lista_productos WHERE id_lista_productos = " + idListaProductos;
                     HashMap<Integer, Integer> mapaListaProducto = obtenerHashMapListaProducto(sqlString);
                     ListaProductos listaProductos = new ListaProductos(idListaProductos, mapaListaProducto);
                     listado.add(listaProductos);
@@ -663,7 +770,7 @@ public class Bbdd {
      * @throws BbddException controlado
      */
     public ArrayList<ListaProductos> obtenerListadoListaProducto() throws BbddException {
-        String sql = "SELECT DISTINCT id_lista_producto FROM lista_producto ";
+        String sql = "SELECT DISTINCT id_lista_productos FROM lista_productos ";
         return (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
     }
 
@@ -797,7 +904,7 @@ public class Bbdd {
     public ListaProductos obtenerListaProductos(int idListaProductos) throws BbddException {
         ListaProductos listaProductos = null;
         ArrayList<ListaProductos> lista = null;
-        String sql = "SELECT * FROM lista_productos WHERE id_lista_producto = " + idListaProductos + " ";
+        String sql = "SELECT * FROM lista_productos WHERE id_lista_productos = " + idListaProductos + " ";
         lista = (ArrayList<ListaProductos>) (ArrayList<?>) obtenerListados(sql);
         if (!lista.isEmpty()) {
             listaProductos = lista.get(0);

@@ -1,6 +1,6 @@
 CREATE TABLE producto_estanteria (
-    id_producto INT,
-    id_estanteria INT,
+    id_producto INT UNSIGNED,
+    id_estanteria INT UNSIGNED,
     cantidad INT,
     PRIMARY KEY (id_producto, id_estanteria),
     FOREIGN KEY (id_producto) REFERENCES producto (id_producto),

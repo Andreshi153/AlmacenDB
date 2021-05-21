@@ -32,9 +32,9 @@ INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Danacol', 5.60, 'F
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Langostinos', 7.89, 'Congelados');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Dancing with the Devil: The Art of Starting Over Demi Lovato CD', 16.99, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Mortadelo y Filemon La Pelicula', 5.99, 'Normal');
-INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Bolsa de guisantes', 3,20, 'Congelados');
-INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Chips Ahoy', 2,74, 'Normal');
-INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Oreos', 2,15, 'Normal');
+INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Bolsa de guisantes', 3.20, 'Congelados');
+INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Chips Ahoy', 2.74, 'Normal');
+INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Oreos', 2.15, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Llave inglesa', 5.49, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Tarta helada', 10.50, 'Congelados');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Clipper de fresa 1,5 L', 1.00, 'Frio');
@@ -65,7 +65,7 @@ INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Silla de madera', 
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Xiaomi Redmi S2', 150, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Pendientes Oro Rosa', 12.63, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Bidon de plastico', 10.99, 'Normal');
-INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Marco de madera', 5,99,'Normal');
+INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Marco de madera', 5.99,'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Hacha larga', 30.50, 'Normal');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Yogur de coco', 2.13, 'Frio');
 INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('Lomo adobado', 7.99, 'Frio');

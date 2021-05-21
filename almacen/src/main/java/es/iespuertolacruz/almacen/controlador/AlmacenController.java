@@ -1,6 +1,5 @@
 package es.iespuertolacruz.almacen.controlador;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import es.iespuertolacruz.almacen.api.*;
@@ -14,14 +13,20 @@ public class AlmacenController {
     private static final String EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z = "El id de la zona debe estar entre la A y la Z\n";
     AlmacenModelo almacenModelo;
 
-    public AlmacenController() throws BbddException, FicheroException, SQLException {
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
+    public AlmacenController() throws BbddException, FicheroException {
         almacenModelo = new AlmacenModelo();
     }
 
-    public String test() throws BbddException {
-        return almacenModelo.test();
-    }
-
+    /**
+     * Metodo que valida si un producto es valida
+     * @param producto a validar
+     * @throws AlmacenException controlado
+     */
     public void validarProducto(Producto producto) throws AlmacenException {
         String mensaje = "";
         if (producto == null) {
@@ -44,6 +49,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si una zona es valida
+     * @param zona a validar
+     * @throws AlmacenException controlado
+     */
     public void validarZona(Zona zona) throws AlmacenException {
         String mensaje = "";
         if (zona == null) {
@@ -60,6 +70,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si una estanteria es valida
+     * @param estanteria a validar
+     * @throws AlmacenException controlado
+     */
     public void validarEstanteria(Estanteria estanteria) throws AlmacenException {
         String mensaje = "";
         if (estanteria == null) {
@@ -82,6 +97,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si un productoEstanteria es valido
+     * @param productoEstanteria a validar
+     * @throws AlmacenException controlado
+     */
     public void validarProductoEstanteria(ProductoEstanteria productoEstanteria) throws AlmacenException {
         String mensaje = "";
         if (productoEstanteria == null) {
@@ -101,6 +121,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si una lista de productos es valida
+     * @param lista de productos a validar
+     * @throws AlmacenException controlado
+     */
     public void validarListaProductos(ListaProductos listaProductos) throws AlmacenException {
         String mensaje = "";
         if (listaProductos == null) {
@@ -117,6 +142,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si un muelle es valido
+     * @param muelle a validar
+     * @throws AlmacenException controlado
+     */
     public void validarMuelle(Muelle muelle) throws AlmacenException {
         String mensaje = "";
         if (muelle == null) {
@@ -133,6 +163,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si una empresa es valida
+     * @param empresa a validar
+     * @throws AlmacenException controlado
+     */
     public void validarEmpresa(Empresa empresa) throws AlmacenException {
         String mensaje = "";
         if (empresa == null) {
@@ -158,6 +193,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si un cliente es valido
+     * @param cliente a validar
+     * @throws AlmacenException controlado
+     */
     public void validarCliente(Cliente cliente) throws AlmacenException {
         String mensaje = "";
         if (cliente == null) {
@@ -174,6 +214,11 @@ public class AlmacenController {
         }
     }
 
+    /**
+     * Metodo que valida si un proveedor es valido
+     * @param proveedor a validar
+     * @throws AlmacenException controlado
+     */
     public void validarProveedor(Proveedor proveedor) throws AlmacenException {
         String mensaje = "";
         if (proveedor == null) {
@@ -190,6 +235,11 @@ public class AlmacenController {
         }
     }
     
+    /**
+     * Metodo que valida si una operacion es valida
+     * @param operacion a validar
+     * @throws AlmacenException controlado
+     */
     public void validarOperacion(Operacion operacion) throws AlmacenException {
         String mensaje = "";
         if (operacion == null) {
@@ -254,6 +304,33 @@ public class AlmacenController {
      */
     public Producto obtenerProducto(int idProducto) throws BbddException {
         return almacenModelo.obtenerProducto(idProducto);
+    }
+
+    /**
+     * Funcion que devuelve el listado de los productos
+     * @return arraylist de productos
+     * @throws BbddException controlado
+     */
+    public ArrayList<Producto> obtenerListadoProducto() throws BbddException {
+        return almacenModelo.obtenerListadoProducto();
+    }
+
+    /**
+     * Funcion que calcula el valor total de todos los productos del almacen
+     * @return valor total de los productos
+     * @throws BbddException controlado
+     */
+    public double obtenerValorProductosTotal() throws BbddException {
+        return almacenModelo.obtenerValorProductosTotal();
+    }
+
+    /**
+     * Funcion que obtiene los huecos totales y los ocupados del almacen
+     * @return [huecos ocupados, huecos totales]
+     * @throws BbddException controlado
+     */
+    public Integer[] obtenerHuecosOcupados() throws BbddException {
+        return almacenModelo.obtenerHuecosOcupados();
     }
 
     //CRUD zona
