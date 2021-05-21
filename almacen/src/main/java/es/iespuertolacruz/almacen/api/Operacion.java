@@ -63,4 +63,16 @@ public class Operacion {
         return this.cif;
     }
 
+    /**
+     * Funcion toString de operacion
+     * @return informacion de la operacion
+     */
+    @Override
+    public String toString() {
+        return "-> Id lista de productos: " + this.idListaProductos + 
+        "\n· CIF de la empresa asociada: " + this.cif + 
+        "\n· Muelle: " + this.idMuelle + "\n· Fecha: " + this.fecha + 
+        "\n· Tipo de operacion: " + this.tipoOperacion;
+    }
+
 }

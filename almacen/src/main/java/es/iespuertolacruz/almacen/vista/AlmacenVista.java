@@ -23,7 +23,8 @@ public class AlmacenVista {
 
     /**
      * Constructor de la clase
-     * @throws BbddException controlado
+     * 
+     * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
     public AlmacenVista() throws BbddException, FicheroException {
@@ -61,13 +62,17 @@ public class AlmacenVista {
                                 break;
                             case 4:
                                 producto = buscarProducto();
-                                if(producto == null) System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
-                                else almacenController.modificar(crearProducto(producto.getIdProducto()));
+                                if (producto == null)
+                                    System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
+                                else
+                                    almacenController.modificar(crearProducto(producto.getIdProducto()));
                                 break;
                             case 5:
                                 producto = buscarProducto();
-                                if(producto == null) System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
-                                else almacenController.eliminar(producto);
+                                if (producto == null)
+                                    System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
+                                else
+                                    almacenController.eliminar(producto);
                                 break;
                             default:
                                 System.out.println("Introduce solo numeros entre 1 y 5");
@@ -93,7 +98,9 @@ public class AlmacenVista {
                             case 3:
                                 idListaProductos = getIdListaProductos();
                                 listaProductos = buscarListaProductos(idListaProductos);
-                                if(listaProductos == null) System.out.println(EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
+                                if (listaProductos == null)
+                                    System.out.println(
+                                            EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
                                 else {
                                     ListaProductos listaModificar = obtenerListaProductos();
                                     listaModificar.setIdListaProducto(idListaProductos);
@@ -101,8 +108,11 @@ public class AlmacenVista {
                                 }
                             case 4:
                                 listaProductos = buscarListaProductos(getIdListaProductos());
-                                if(listaProductos == null) System.out.println(EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
-                                else almacenController.eliminar(listaProductos);
+                                if (listaProductos == null)
+                                    System.out.println(
+                                            EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
+                                else
+                                    almacenController.eliminar(listaProductos);
                                 break;
                             default:
                                 System.out.println("Introduce solo numeros entre 1 y 4");
@@ -123,15 +133,21 @@ public class AlmacenVista {
                             case 2:
                                 idListaProductos = getIdListaProductos();
                                 operacion = buscarOperacion(idListaProductos);
-                                if(operacion != null) System.out.println("Ya existe una operacion asociada a ese identificador de lista de productos");
-                                else almacenController.insertar(crearOperacion(idListaProductos));
+                                if (operacion != null)
+                                    System.out.println(
+                                            "Ya existe una operacion asociada a ese identificador de lista de productos");
+                                else
+                                    almacenController.insertar(crearOperacion(idListaProductos));
                                 break;
 
                             case 3:
                                 idListaProductos = getIdListaProductos();
                                 operacion = buscarOperacion(idListaProductos);
-                                if(operacion == null) System.out.println(NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS);
-                                else almacenController.modificar(crearOperacion(idListaProductos));
+                                if (operacion == null)
+                                    System.out.println(
+                                            NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS);
+                                else
+                                    almacenController.modificar(crearOperacion(idListaProductos));
                                 break;
                             default:
                                 System.out.println("Introduce solo numeros entre 1 y 3");
@@ -147,11 +163,12 @@ public class AlmacenVista {
                             case 1:
                                 cif = getCif();
                                 empresa = buscarEmpresa(cif);
-                                if (empresa != null) System.out.println("La empresa ya existe");
+                                if (empresa != null)
+                                    System.out.println("La empresa ya existe");
                                 else {
                                     empresa = crearEmpresa(cif);
                                     almacenController.insertar(empresa);
-                                    insertarClienteProveedor(elegirTipoEmpresa() ,empresa.getCif());
+                                    insertarClienteProveedor(elegirTipoEmpresa(), empresa.getCif());
                                 }
                                 break;
                             case 2:
@@ -168,21 +185,25 @@ public class AlmacenVista {
                             case 5:
                                 cif = getCif();
                                 empresa = buscarEmpresa(cif);
-                                if (empresa == null) System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
+                                if (empresa == null)
+                                    System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
                                 else {
                                     empresa = crearEmpresa(cif);
                                     almacenController.modificar(empresa);
-                                    modificarClienteProveedor(elegirTipoEmpresa() ,empresa.getCif());
+                                    modificarClienteProveedor(elegirTipoEmpresa(), empresa.getCif());
                                 }
                                 break;
                             case 6:
                                 empresa = buscarEmpresa(getCif());
-                                if(empresa == null) System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
+                                if (empresa == null)
+                                    System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
                                 else {
                                     almacenController.eliminar(empresa);
                                     Cliente cliente = buscarCliente(empresa.getCif());
-                                    if(cliente != null) almacenController.eliminar(cliente);
-                                    else almacenController.eliminar(buscarProveedor(empresa.getCif()));
+                                    if (cliente != null)
+                                        almacenController.eliminar(cliente);
+                                    else
+                                        almacenController.eliminar(buscarProveedor(empresa.getCif()));
                                 }
                                 break;
                         }
@@ -195,11 +216,13 @@ public class AlmacenVista {
                             case 1:
                                 Integer[] huecos = obtenerHuecosOcupados();
                                 System.out.println("El numero de huecos ocupados del almacen es: " + huecos[0]
-                                + "\nEl numero total de huecos del almacen es: " + huecos[1]
-                                + "\nEl indice de ocupacion del almacen es: " + Math.floor(((double)(huecos[0])/huecos[1])*10000)/100 + "%");
+                                        + "\nEl numero total de huecos del almacen es: " + huecos[1]
+                                        + "\nEl indice de ocupacion del almacen es: "
+                                        + Math.floor(((double) (huecos[0]) / huecos[1]) * 10000) / 100 + "%");
                                 break;
                             case 2:
-                                System.out.println("El valor total de los productos del almacen es: " + obtenerValorProductosTotal() + DIVISA);
+                                System.out.println("El valor total de los productos del almacen es: "
+                                        + obtenerValorProductosTotal() + DIVISA);
                                 break;
                             default:
                                 System.out.println("Escribe solo numeros del 1 al 2");
@@ -219,6 +242,7 @@ public class AlmacenVista {
 
     /**
      * Metodo que muestra los menus del programa
+     * 
      * @param numMenu numero del menu a mostrar
      */
     public static void menu(int numMenu) {
@@ -233,8 +257,9 @@ public class AlmacenVista {
                 break;
             // menu 1. Productos
             case 1:
-                System.out.println("1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos" + "\n3. Insertar nuevo producto"
-                        + "\n4. Editar informacion de un producto" + "\n5. Borrar un producto");
+                System.out.println("1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos"
+                        + "\n3. Insertar nuevo producto" + "\n4. Editar informacion de un producto"
+                        + "\n5. Borrar un producto");
                 break;
             // menu 2. Listas de productos
             case 2:
@@ -264,6 +289,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide informacion al usuario para crear una lista de productos
+     * 
      * @return lista de productos creada
      * @throws BbddException controlado
      */
@@ -277,7 +303,7 @@ public class AlmacenVista {
             Producto producto = almacenController.obtenerProducto(idProducto);
             if (producto == null && idProducto != 0) {
                 System.out.println("El producto no existe dentro de la base de datos");
-            } else if(mapa.containsKey(idProducto)) {
+            } else if (mapa.containsKey(idProducto)) {
                 System.out.println("El producto ya esta en la lista");
             } else if (idProducto != 0) {
                 System.out.println("Introduce la cantidad del producto: ");
@@ -291,49 +317,56 @@ public class AlmacenVista {
 
     /**
      * Funcion toString del listado de clientes
+     * 
      * @return cadena formateada de la lista de clientes
      * @throws BbddException controlado
      */
     private static String listadoClientesToString() throws BbddException {
         ArrayList<Cliente> listado = almacenController.obtenerListadoCliente();
         StringBuilder informacion = new StringBuilder("Listado de clientes:");
-        for(Cliente cliente : listado) {
-            informacion.append("\n-> Cif: " + cliente.getCif() + ", porcentaje de descuento: " + Math.round((1 - cliente.getPorcentajeDesc())*100) + "%");
+        for (Cliente cliente : listado) {
+            informacion.append("\n-> Cif: " + cliente.getCif() + ", porcentaje de descuento: "
+                    + Math.round((1 - cliente.getPorcentajeDesc()) * 100) + "%");
         }
         return informacion.toString();
     }
 
     /**
      * Funcion toString del listado de proveedores
+     * 
      * @return cadena formateada de la lista de proveedores
      * @throws BbddException controlado
      */
     private static String listadoProveedoresToString() throws BbddException {
         ArrayList<Proveedor> listado = almacenController.obtenerListadoProveedor();
         StringBuilder informacion = new StringBuilder("Listado de proveedores:");
-        for(Proveedor proveedor : listado) {
-            informacion.append("\n-> Cif: " + proveedor.getCif() + ", tipo de producto: " + proveedor.getTipoProducto());
+        for (Proveedor proveedor : listado) {
+            informacion
+                    .append("\n-> Cif: " + proveedor.getCif() + ", tipo de producto: " + proveedor.getTipoProducto());
         }
         return informacion.toString();
     }
 
     /**
      * Funcion toString del listado de productos
+     * 
      * @return cadena formateada de la lista de productos
      * @throws BbddException controlado
      */
     private static String listadoProductosToString() throws BbddException {
         ArrayList<Producto> listado = almacenController.obtenerListadoProducto();
         StringBuilder informacion = new StringBuilder("Listado de productos:");
-        for(Producto producto : listado) {
-            informacion.append("\n-> Id del producto: " + producto.getIdProducto() + ", nombre del producto: " + producto.getNombre()
-            + ", tipo del producto: " + producto.getTipo() + ", precio del producto: " + producto.getPrecioUnitario() + DIVISA);
+        for (Producto producto : listado) {
+            informacion.append("\n-> Id del producto: " + producto.getIdProducto() + ", nombre del producto: "
+                    + producto.getNombre() + ", tipo del producto: " + producto.getTipo() + ", precio del producto: "
+                    + producto.getPrecioUnitario() + DIVISA);
         }
         return informacion.toString();
     }
-    
+
     /**
      * Funcion que calcula el valor total de todos los productos del almacen
+     * 
      * @return valor total de los productos
      * @throws BbddException controlado
      */
@@ -343,6 +376,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que obtiene los huecos totales y los ocupados del almacen
+     * 
      * @return [huecos ocupados, huecos totales]
      * @throws BbddException controlado
      */
@@ -352,6 +386,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario el id de un producto y lo busca en la bbdd
+     * 
      * @return producto encontrado
      * @throws BbddException controlado
      */
@@ -363,6 +398,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario el id de una lista de productos
+     * 
      * @return id de la lista introducida por el usuario
      * @throws BbddException controlado
      */
@@ -372,7 +408,9 @@ public class AlmacenVista {
     }
 
     /**
-     * Funcion que pide al usuario el id de una lista de productos y la busca en la bbdd
+     * Funcion que pide al usuario el id de una lista de productos y la busca en la
+     * bbdd
+     * 
      * @return listaProductos encontrada
      * @throws BbddException controlado
      */
@@ -381,16 +419,19 @@ public class AlmacenVista {
     }
 
     /**
-     * Funcion que pide al usuario el id de una lista de productos busca la operacion correspondiente en la bbdd
+     * Funcion que pide al usuario el id de una lista de productos busca la
+     * operacion correspondiente en la bbdd
+     * 
      * @return operacion encontrada
      * @throws BbddException controlado
      */
     private static Operacion buscarOperacion(int idListaProductos) throws BbddException {
         return almacenController.obtenerOperacion(idListaProductos);
     }
-    
+
     /**
      * Funcion que pide al usuario el cif de una empresa
+     * 
      * @return cif introducido
      * @throws BbddException controlado
      */
@@ -401,6 +442,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario el cif de una empresa y la busca en la bbdd
+     * 
      * @return empresa encontrada
      * @throws BbddException controlado
      */
@@ -410,6 +452,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario el cif de un cliente y la busca en la bbdd
+     * 
      * @return cliente encontrado
      * @throws BbddException controlado
      */
@@ -419,6 +462,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario el cif de un proveedor y la busca en la bbdd
+     * 
      * @return proveedor encontrado
      * @throws BbddException controlado
      */
@@ -428,6 +472,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario los datos de un producto para crearlo
+     * 
      * @param idProducto del producto a crear
      * @return producto creado
      */
@@ -448,6 +493,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario los datos de una operacion para crearla
+     * 
      * @param idListaProductos de la operacion a crear
      * @return operacion creada
      */
@@ -471,6 +517,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario los datos de una empresa para crearla
+     * 
      * @param cif de la empresa a crear
      * @return empresa creada
      */
@@ -488,6 +535,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario los datos de un cliente para crearlo
+     * 
      * @param cif del cliente a crear
      * @return cliente creado
      */
@@ -499,6 +547,7 @@ public class AlmacenVista {
 
     /**
      * Funcion que pide al usuario los datos de un proveedor para crearlo
+     * 
      * @param cif del proveedor a crear
      * @return proveedor creado
      */
@@ -509,12 +558,13 @@ public class AlmacenVista {
         while (tipo < 1 || tipo > 3) {
             System.out.println("Debes introducir solo numeros del 1 al 3");
             tipo = scanner.nextInt();
-        } 
+        }
         return new Proveedor(cif, tiposProducto[tipo - 1]);
     }
 
     /**
      * Funcion que pide al usuario el tipo de empresa a crear
+     * 
      * @return int tipo de empresa
      */
     private static int elegirTipoEmpresa() {
@@ -529,25 +579,31 @@ public class AlmacenVista {
 
     /**
      * Funcion que inserta un cliente/empresa en la bbdd
+     * 
      * @param tipoEmpresa a crear 1-cliente 2-empresa
-     * @param cif del cliente/proveedor
-     * @throws BbddException controlado
+     * @param cif         del cliente/proveedor
+     * @throws BbddException    controlado
      * @throws AlmacenException controlado
      */
     private static void insertarClienteProveedor(int tipoEmpresa, String cif) throws BbddException, AlmacenException {
-        if(tipoEmpresa == 1) almacenController.insertar(crearCliente(cif));
-        else almacenController.insertar(crearProveedor(cif));
+        if (tipoEmpresa == 1)
+            almacenController.insertar(crearCliente(cif));
+        else
+            almacenController.insertar(crearProveedor(cif));
     }
 
     /**
      * Funcion que modifica un cliente/empresa de la bbdd
+     * 
      * @param tipoEmpresa a modificar 1-cliente 2-empresa
-     * @param cif del cliente/proveedor
-     * @throws BbddException controlado
+     * @param cif         del cliente/proveedor
+     * @throws BbddException    controlado
      * @throws AlmacenException controlado
      */
     private static void modificarClienteProveedor(int tipoEmpresa, String cif) throws BbddException, AlmacenException {
-        if(tipoEmpresa == 1) almacenController.modificar(crearCliente(cif));
-        else almacenController.modificar(crearProveedor(cif));
+        if (tipoEmpresa == 1)
+            almacenController.modificar(crearCliente(cif));
+        else
+            almacenController.modificar(crearProveedor(cif));
     }
 }
