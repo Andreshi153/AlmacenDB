@@ -52,11 +52,11 @@ public class Producto {
         return this.tipo;
     }
 
+    @Override
     /**
      * Funcion toString del producto
      * @return informacion del producto
      */
-    @Override
     public String toString() {
         return "-> Id: " + this.idProducto + "\n-> Nombre: " + this.nombre + "\n-> Precio unitario: " + this.precioUnitario + "\n-> Tipo: " + this.tipo + "\n";
     }

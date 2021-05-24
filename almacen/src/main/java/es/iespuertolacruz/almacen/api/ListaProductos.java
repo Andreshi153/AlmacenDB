@@ -48,12 +48,20 @@ public class ListaProductos {
     }
 
     @Override
+    /**
+     * Funcion toString de la lista de productos
+     * @return informacion de la lista de productos
+     */
     public String toString() {
         StringBuilder informacion = new StringBuilder("-> Id de la lista: " + idListaProductos);
         this.lista.forEach((producto, cantidad) -> informacion.append("\n· Producto " + producto + ": " + cantidad + " articulos"));
         return informacion.toString();
     }
 
+    /**
+     * Metodo setter del id de la lista de productos
+     * @param idListaProductos de la lista
+     */
     public void setIdListaProducto(int idListaProductos) {
         this.idListaProductos = idListaProductos;
     }

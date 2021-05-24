@@ -73,9 +73,10 @@ public class Bbdd {
         for (String tabla : listaTablas) {
             if(!existeTabla(tabla)) {
                 String crearTabla = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".crear.sql");
-                System.out.println(tabla);
+                System.out.println("Creando tabla " + tabla + "...");
                 actualizar(crearTabla);
                 String insertElemento = new Fichero().leer("almacen/resources/sql/"+carpeta+"/"+tabla+".insertar.sql");
+                System.out.println("Realizando las inserciones en la tabla " + tabla + "...");
                 insertarElementos(insertElemento);
             }
         }
@@ -125,7 +126,7 @@ public class Bbdd {
         Connection connection = null;
 
         try {
-            //Class.forName(driver);
+            Class.forName(driver);
             if (usuario == null || password == null) {
                 connection = DriverManager.getConnection(url);
             } else {
@@ -465,7 +466,7 @@ public class Bbdd {
      * @throws BbddException error controlado
      */
     public void modificar(Cliente cliente) throws BbddException {
-        String sql = "UPDATE cliente SET porcentaje_descuento = '" + cliente.getPorcentajeDesc() + "'" + WHERE_CIF
+        String sql = "UPDATE cliente SET porcentaje_desc = '" + cliente.getPorcentajeDesc() + "'" + WHERE_CIF
                 + cliente.getCif() + "'";
         actualizar(sql);
     }
@@ -489,7 +490,7 @@ public class Bbdd {
     public void modificar(Operacion operacion) throws BbddException {
         String sql = "UPDATE operacion SET id_muelle = '" + operacion.getIdMuelle() + "', fecha = '"
                 + operacion.getFecha() + "', tipo_operacion = '" + operacion.getTipoOperacion() + "', cif = '"
-                + operacion.getCif() + "', WHERE id_lista_productos = " + operacion.getIdListaProductos() + "'";
+                + operacion.getCif() + "' WHERE id_lista_productos = '" + operacion.getIdListaProductos() + "'";
         actualizar(sql);
     }
 

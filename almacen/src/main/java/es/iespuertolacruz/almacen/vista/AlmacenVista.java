@@ -17,6 +17,7 @@ public class AlmacenVista {
     private static final String NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS = "No existe ninguna operacion asociada a ese identificador de lista de productos";
     private static final String EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS = "El identificador introducido no corresponde con ninguna lista de productos";
     private static final String NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR = "No existe ningun producto con ese identificador";
+    private static final String SEPARADOR = "\n------------";
     private static Scanner scanner = new Scanner(System.in);
     private static AlmacenController almacenController;
     private static final String[] tiposProducto = { "Normal", "Frio", "Congelados" };
@@ -24,7 +25,7 @@ public class AlmacenVista {
     /**
      * Constructor de la clase
      * 
-     * @throws BbddException    controlado
+     * @throws BbddException controlado
      * @throws FicheroException controlado
      */
     public AlmacenVista() throws BbddException, FicheroException {
@@ -206,6 +207,9 @@ public class AlmacenVista {
                                         almacenController.eliminar(buscarProveedor(empresa.getCif()));
                                 }
                                 break;
+                            default:
+                                System.out.println("Escribe solo numeros del 1 al 6");
+                                break;
                         }
                         break;
                     case 5:
@@ -249,7 +253,7 @@ public class AlmacenVista {
         switch (numMenu) {
             // menu principal
             case 0:
-                System.out.println("\n0. Salir" + "\n1. Productos" + // menu(1)
+                System.out.println("\nALMACEN" + SEPARADOR + "\n0. Salir" + "\n1. Productos" + // menu(1)
                         "\n2. Listas de productos" + // menu(2)
                         "\n3. Operaciones" + // menu(3)
                         "\n4. Empresas" + // menu(4)
@@ -257,30 +261,29 @@ public class AlmacenVista {
                 break;
             // menu 1. Productos
             case 1:
-                System.out.println("1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos"
+                System.out.println(SEPARADOR + "\n1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos"
                         + "\n3. Insertar nuevo producto" + "\n4. Editar informacion de un producto"
                         + "\n5. Borrar un producto");
                 break;
             // menu 2. Listas de productos
             case 2:
-                System.out.println("1. Mostrar informacion de una lista" + "\n2. Crear nueva lista"
+                System.out.println(SEPARADOR + "\n1. Mostrar informacion de una lista" + "\n2. Crear nueva lista"
                         + "\n3. Editar lista" + "\n4. Eliminar lista");
                 break;
             // menu 3. Operaciones
             case 3:
-                System.out.println("1. Mostrar informacion de una operacion" + "\n2. Crear nueva operacion"
+                System.out.println(SEPARADOR + "\n1. Mostrar informacion de una operacion" + "\n2. Crear nueva operacion"
                         + "\n3. Editar datos de una operacion");
                 break;
             // menu 4. Empresas
             case 4:
-                System.out.println("1. Insertar nueva empresa" + "\n2. Mostrar informacion de una empresa"
+                System.out.println(SEPARADOR + "\n1. Insertar nueva empresa" + "\n2. Mostrar informacion de una empresa"
                         + "\n3. Mostrar clientes" + "\n4. Mostrar proveedores"
                         + "\n5. Modificar informacion de una empresa" + "\n6. Borrar empresa");
                 break;
             // menu 5. Funciones
             case 5:
-                System.out.println(
-                        "1. Calcular indice de ocupacion del almacen" + "\n2. Calcular valor de productos del almacen");
+                System.out.println(SEPARADOR + "\n1. Calcular indice de ocupacion del almacen" + "\n2. Calcular valor de productos del almacen");
                 break;
             default:
                 break;
@@ -477,6 +480,7 @@ public class AlmacenVista {
      * @return producto creado
      */
     private static Producto crearProducto(int idProducto) {
+        scanner.nextLine();
         System.out.println("Introduce el nombre del producto: ");
         String nombre = scanner.nextLine();
         System.out.println("Introduce el precio del producto: ");
