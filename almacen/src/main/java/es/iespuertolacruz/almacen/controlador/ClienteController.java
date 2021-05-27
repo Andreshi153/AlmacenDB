@@ -1,13 +1,27 @@
 package es.iespuertolacruz.almacen.controlador;
 
+import java.util.ArrayList;
+
+import es.iespuertolacruz.almacen.api.Cliente;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
 import es.iespuertolacruz.almacen.modelo.ClienteModelo;
 public class ClienteController {
     
     ClienteModelo clienteModelo;
+    EmpresaController empresaController;
+
+    public ClienteController() throws BbddException, FicheroException {
+        empresaController = new EmpresaController();
+        clienteModelo = new ClienteModelo();
+    }
+
+    private boolean existe(Cliente cliente) throws BbddException {
+        return buscar(cliente.getCif()) != null;
+    }
     
-    public void validarCliente(Cliente cliente) throws AlmacenException {
+    public void validar(Cliente cliente) throws AlmacenException {
         String mensaje = "";
         if (cliente == null) {
             throw new AlmacenException("El cliente no puede ser nulo");
@@ -30,8 +44,9 @@ public class ClienteController {
      * @throws AlmacenException controlado
      */
     public void insertar(Cliente cliente) throws BbddException, AlmacenException {
-        validarCliente(cliente);
-        clienteModelo.insertar(cliente);
+        validar(cliente);
+        if(!existe(cliente)) clienteModelo.insertar(cliente);
+        else throw new AlmacenException("El cliente ya existe en la base de datos");
     }
     /**
      * Metodo que elimina un cliente de la bbdd
@@ -40,7 +55,7 @@ public class ClienteController {
      * @throws AlmacenException controlado
      */
     public void eliminar(Cliente cliente) throws BbddException, AlmacenException {
-        validarCliente(cliente);
+        validar(cliente);
         clienteModelo.eliminar(cliente);
     }
     /**
@@ -50,7 +65,7 @@ public class ClienteController {
      * @throws AlmacenException controlado
      */
     public void modificar(Cliente cliente) throws BbddException, AlmacenException {
-        validarCliente(cliente);
+        validar(cliente);
         clienteModelo.modificar(cliente);
     }
     /**
@@ -58,15 +73,15 @@ public class ClienteController {
      * @param cif del cliente a buscar
      * @throws BbddException controlado
      */
-    public Cliente obtenerCliente(String cif) throws BbddException {
-        return clienteModelo.obtenerCliente(cif);
+    public Cliente buscar(String cif) throws BbddException {
+        return clienteModelo.buscar(cif);
     }
     /**
      * Funcion que devuelve el listado de clientes
      * @return arraylist de clientes
      * @throws BbddException
      */
-    public ArrayList<Cliente> obtenerListadoCliente() throws BbddException {
-        return clienteModelo.obtenerListadoCliente();
+    public ArrayList<Cliente> buscarTodos() throws BbddException {
+        return clienteModelo.buscarTodos();
     }
 }

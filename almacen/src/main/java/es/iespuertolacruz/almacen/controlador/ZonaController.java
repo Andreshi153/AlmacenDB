@@ -3,21 +3,27 @@ package es.iespuertolacruz.almacen.controlador;
 import es.iespuertolacruz.almacen.api.Zona;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
 import es.iespuertolacruz.almacen.modelo.ZonaModelo;
 
 public class ZonaController {
     
-    private static final String EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z = "El id de la zona debe estar entre la A y la Z\n";
-    
     ZonaModelo zonaModelo;
 
-    public void validarZona(Zona zona) throws AlmacenException {
+    public ZonaController() throws BbddException, FicheroException {
+        zonaModelo = new ZonaModelo();
+    }
+    private boolean existe(Zona zona) throws BbddException {
+        return buscar(zona.getIdZona()) != null;
+    }
+
+    public void validar(Zona zona) throws AlmacenException {
         String mensaje = "";
         if (zona == null) {
             throw new AlmacenException("La zona no puede ser nula");
         }
         if (zona.getIdZona() < 'A' || zona.getIdZona() > 'Z') {
-            mensaje += EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z;
+            mensaje += "El id de la zona debe estar entre la A y la Z\n";
         }
         if (zona.getTipo().isEmpty() || zona.getTipo() == null) {
             mensaje += "El tipo de la zona no puede ser nulo o vacio\n";
@@ -27,7 +33,6 @@ public class ZonaController {
         }
     }
 
-
     /**
      * Metodo que inserta una zona en la bbdd
      * @param zona a insertar
@@ -35,8 +40,9 @@ public class ZonaController {
      * @throws AlmacenException controlado
      */
     public void insertar(Zona zona) throws BbddException, AlmacenException {
-        validarZona(zona);
-        zonaModelo.insertar(zona);
+        validar(zona);
+        if(!existe(zona)) zonaModelo.insertar(zona);
+        else throw new AlmacenException("La zona ya existe en la base de datos");
     }
     /**
      * Metodo que elimina una zona de la bbdd
@@ -45,8 +51,9 @@ public class ZonaController {
      * @throws AlmacenException controlado
      */
     public void eliminar(Zona zona) throws BbddException, AlmacenException {
-        validarZona(zona);
-        zonaModelo.eliminar(zona);
+        validar(zona);
+        if(existe(zona)) zonaModelo.eliminar(zona);
+        else throw new AlmacenException("La zona no existe en la base de datos");
     }
     /**
      * Metodo que modifica una zona de la bbdd
@@ -55,16 +62,17 @@ public class ZonaController {
      * @throws AlmacenException controlado
      */
     public void modificar(Zona zona) throws BbddException, AlmacenException {
-        validarZona(zona);
-        zonaModelo.modificar(zona);
+        validar(zona);
+        if(existe(zona)) zonaModelo.modificar(zona);
+        else throw new AlmacenException("La zona no existe en la base de datos");
     }
     /**
      * Metodo que busca una zona en la bbdd
      * @param idZona de la zona a buscar
      * @throws BbddException controlado
      */
-    public Zona obtenerZona(char idZona) throws BbddException {
-        return zonaModelo.obtenerZona(idZona);
+    public Zona buscar(char idZona) throws BbddException {
+        return zonaModelo.buscar(String.valueOf(idZona));
     }
 
 }

@@ -1,15 +1,26 @@
 package es.iespuertolacruz.almacen.controlador;
 
+import es.iespuertolacruz.almacen.api.Estanteria;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
 import es.iespuertolacruz.almacen.modelo.EstanteriaModelo;
-public class EstanteriaController {
-    
-    private static final String EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z = "El id de la zona debe estar entre la A y la Z\n";
-     
-    EstanteriaModelo estanteriaModelo;
 
-    public void validarEstanteria(Estanteria estanteria) throws AlmacenException {
+public class EstanteriaController {
+         
+    EstanteriaModelo estanteriaModelo;
+    ZonaController zonaController;
+
+    public EstanteriaController() throws BbddException, FicheroException {
+        zonaController = new ZonaController();
+        estanteriaModelo = new EstanteriaModelo();
+    }
+
+    public boolean existe(Estanteria estanteria) throws BbddException {
+        return buscar(estanteria.getIdEstanteria()) != null;
+    }
+
+    public void validar(Estanteria estanteria) throws AlmacenException {
         String mensaje = "";
         if (estanteria == null) {
             throw new AlmacenException("La estanteria no puede ser nula");
@@ -18,7 +29,7 @@ public class EstanteriaController {
             mensaje += "El id de la estanteria no puede ser menor o igual que 0\n";
         }
         if (estanteria.getIdZona() < 'A' || estanteria.getIdZona() > 'Z') {
-            mensaje += EL_ID_DE_LA_ZONA_DEBE_ESTAR_ENTRE_LA_A_Y_LA_Z;
+            mensaje += "El id de la zona debe estar entre la A y la Z\n";
         }
         if (estanteria.getNumAlturas() <= 0) {
             mensaje += "El numero de alturas de la estanteria no puede ser menor o igual que 0\n";
@@ -30,8 +41,7 @@ public class EstanteriaController {
             throw new AlmacenException(mensaje);
         }
     }
-
-
+    
       /**
      * Metodo que inserta una estanteria en la bbdd
      * @param estanteria a insertar
@@ -39,8 +49,9 @@ public class EstanteriaController {
      * @throws AlmacenException controlado
      */
     public void insertar(Estanteria estanteria) throws BbddException, AlmacenException {
-        validarEstanteria(estanteria);
-        estanteriaModelo.insertar(estanteria);
+        validar(estanteria);
+        if(!existe(estanteria)) estanteriaModelo.insertar(estanteria);
+        else throw new AlmacenException("La estanteria ya existe en la base de datos");
     }
     /**
      * Metodo que elimina una estanteria de la bbdd
@@ -49,8 +60,9 @@ public class EstanteriaController {
      * @throws AlmacenException controlado
      */
     public void eliminar(Estanteria estanteria) throws BbddException, AlmacenException {
-        validarEstanteria(estanteria);
-        estanteriaModelo.eliminar(estanteria);
+        validar(estanteria);
+        if(existe(estanteria)) estanteriaModelo.eliminar(estanteria);
+        else throw new AlmacenException("La estanteria no existe en la base de datos");
     }
     /**
      * Metodo que modifica una estanteria de la bbdd
@@ -59,15 +71,16 @@ public class EstanteriaController {
      * @throws AlmacenException controlado
      */
     public void modificar(Estanteria estanteria) throws BbddException, AlmacenException {
-        validarEstanteria(estanteria);
-        estanteriaModelo.modificar(estanteria);
+        validar(estanteria);
+        if(existe(estanteria)) estanteriaModelo.modificar(estanteria);
+        else throw new AlmacenException("La estanteria no existe en la base de datos");
     }
     /**
      * Metodo que busca una estanteria en la bbdd
      * @param idEstanteria de la estanteria a buscar
      * @throws BbddException controlado
      */
-    public Estanteria obtenerEstanteria(int idEstanteria) throws BbddException {
-        return estanteriaModelo.obtenerEstanteria(idEstanteria);
+    public Estanteria buscar(int idEstanteria) throws BbddException {
+        return estanteriaModelo.buscar(String.valueOf(idEstanteria));
     }
 }

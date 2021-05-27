@@ -5,243 +5,55 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import es.iespuertolacruz.almacen.api.*;
-import es.iespuertolacruz.almacen.controlador.AlmacenController;
+import es.iespuertolacruz.almacen.controlador.*;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
 import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class AlmacenVista {
 
-    private static final String EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA = "El cif introducido no corresponde con ninguna empresa";
     private static final String DIVISA = "€";
-    private static final String NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS = "No existe ninguna operacion asociada a ese identificador de lista de productos";
-    private static final String EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS = "El identificador introducido no corresponde con ninguna lista de productos";
-    private static final String NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR = "No existe ningun producto con ese identificador";
     private static final String SEPARADOR = "\n------------";
-    private static Scanner scanner = new Scanner(System.in);
-    private static AlmacenController almacenController;
     private static final String[] tiposProducto = { "Normal", "Frio", "Congelados" };
+    private static Scanner scanner = new Scanner(System.in);
 
     /**
-     * Constructor de la clase
+     * Funcion principal de la aplicacion
      * 
-     * @throws BbddException controlado
+     * @param args
+     * @throws BbddException    controlado
      * @throws FicheroException controlado
+     * @throws AlmacenException controlado
      */
-    public AlmacenVista() throws BbddException, FicheroException {
-        almacenController = new AlmacenController();
-    }
-
     public static void main(String[] args) throws BbddException, FicheroException, AlmacenException {
-        AlmacenVista almacenVista = new AlmacenVista();
         boolean salir = false;
         while (!salir) {
-            try {
-                int opcion = -1;
-                menu(0);
-                opcion = scanner.nextInt();
-                switch (opcion) {
-                    case 0:
-                        salir = true;
-                        break;
-                    case 1:
-                        menu(1);
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-                        Producto producto;
-                        switch (opcion) {
-                            case 1:
-                                producto = buscarProducto();
-                                System.out.println(producto != null ? producto.toString()
-                                        : NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
-                                break;
-                            case 2:
-                                System.out.println(listadoProductosToString());
-                                break;
-                            case 3:
-                                almacenController.insertar(crearProducto(100));
-                                break;
-                            case 4:
-                                producto = buscarProducto();
-                                if (producto == null)
-                                    System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
-                                else
-                                    almacenController.modificar(crearProducto(producto.getIdProducto()));
-                                break;
-                            case 5:
-                                producto = buscarProducto();
-                                if (producto == null)
-                                    System.out.println(NO_EXISTE_NINGUN_PRODUCTO_CON_ESE_IDENTIFICADOR);
-                                else
-                                    almacenController.eliminar(producto);
-                                break;
-                            default:
-                                System.out.println("Introduce solo numeros entre 1 y 5");
-                                break;
-                        }
-                        break;
-                    case 2:
-                        menu(2);
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-                        ListaProductos listaProductos;
-                        int idListaProductos;
-                        switch (opcion) {
-                            case 1:
-                                listaProductos = buscarListaProductos(getIdListaProductos());
-                                System.out.println(listaProductos != null ? listaProductos.toString()
-                                        : EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
-                                break;
-                            case 2:
-                                listaProductos = obtenerListaProductos();
-                                almacenController.insertar(listaProductos);
-                                break;
-                            case 3:
-                                idListaProductos = getIdListaProductos();
-                                listaProductos = buscarListaProductos(idListaProductos);
-                                if (listaProductos == null)
-                                    System.out.println(
-                                            EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
-                                else {
-                                    ListaProductos listaModificar = obtenerListaProductos();
-                                    listaModificar.setIdListaProducto(idListaProductos);
-                                    almacenController.modificar(listaModificar);
-                                }
-                            case 4:
-                                listaProductos = buscarListaProductos(getIdListaProductos());
-                                if (listaProductos == null)
-                                    System.out.println(
-                                            EL_IDENTIFICADOR_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_LISTA_DE_PRODUCTOS);
-                                else
-                                    almacenController.eliminar(listaProductos);
-                                break;
-                            default:
-                                System.out.println("Introduce solo numeros entre 1 y 4");
-                                break;
-                        }
-                        break;
-                    case 3:
-                        menu(3);
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-                        Operacion operacion;
-                        switch (opcion) {
-                            case 1:
-                                operacion = buscarOperacion(getIdListaProductos());
-                                System.out.println(operacion != null ? operacion.toString()
-                                        : NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS);
-                                break;
-                            case 2:
-                                idListaProductos = getIdListaProductos();
-                                operacion = buscarOperacion(idListaProductos);
-                                if (operacion != null)
-                                    System.out.println(
-                                            "Ya existe una operacion asociada a ese identificador de lista de productos");
-                                else
-                                    almacenController.insertar(crearOperacion(idListaProductos));
-                                break;
-
-                            case 3:
-                                idListaProductos = getIdListaProductos();
-                                operacion = buscarOperacion(idListaProductos);
-                                if (operacion == null)
-                                    System.out.println(
-                                            NO_EXISTE_NINGUNA_OPERACION_ASOCIADA_A_ESE_IDENTIFICADOR_DE_LISTA_DE_PRODUCTOS);
-                                else
-                                    almacenController.modificar(crearOperacion(idListaProductos));
-                                break;
-                            default:
-                                System.out.println("Introduce solo numeros entre 1 y 3");
-                        }
-                        break;
-                    case 4:
-                        menu(4);
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-                        Empresa empresa;
-                        String cif;
-                        switch (opcion) {
-                            case 1:
-                                cif = getCif();
-                                empresa = buscarEmpresa(cif);
-                                if (empresa != null)
-                                    System.out.println("La empresa ya existe");
-                                else {
-                                    empresa = crearEmpresa(cif);
-                                    almacenController.insertar(empresa);
-                                    insertarClienteProveedor(elegirTipoEmpresa(), empresa.getCif());
-                                }
-                                break;
-                            case 2:
-                                empresa = buscarEmpresa(getCif());
-                                System.out.println(empresa != null ? empresa.toString()
-                                        : EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
-                                break;
-                            case 3:
-                                System.out.println(listadoClientesToString());
-                                break;
-                            case 4:
-                                System.out.println(listadoProveedoresToString());
-                                break;
-                            case 5:
-                                cif = getCif();
-                                empresa = buscarEmpresa(cif);
-                                if (empresa == null)
-                                    System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
-                                else {
-                                    empresa = crearEmpresa(cif);
-                                    almacenController.modificar(empresa);
-                                    modificarClienteProveedor(elegirTipoEmpresa(), empresa.getCif());
-                                }
-                                break;
-                            case 6:
-                                empresa = buscarEmpresa(getCif());
-                                if (empresa == null)
-                                    System.out.println(EL_CIF_INTRODUCIDO_NO_CORRESPONDE_CON_NINGUNA_EMPRESA);
-                                else {
-                                    almacenController.eliminar(empresa);
-                                    Cliente cliente = buscarCliente(empresa.getCif());
-                                    if (cliente != null)
-                                        almacenController.eliminar(cliente);
-                                    else
-                                        almacenController.eliminar(buscarProveedor(empresa.getCif()));
-                                }
-                                break;
-                            default:
-                                System.out.println("Escribe solo numeros del 1 al 6");
-                                break;
-                        }
-                        break;
-                    case 5:
-                        menu(5);
-                        opcion = scanner.nextInt();
-                        scanner.nextLine();
-                        switch (opcion) {
-                            case 1:
-                                Integer[] huecos = obtenerHuecosOcupados();
-                                System.out.println("El numero de huecos ocupados del almacen es: " + huecos[0]
-                                        + "\nEl numero total de huecos del almacen es: " + huecos[1]
-                                        + "\nEl indice de ocupacion del almacen es: "
-                                        + Math.floor(((double) (huecos[0]) / huecos[1]) * 10000) / 100 + "%");
-                                break;
-                            case 2:
-                                System.out.println("El valor total de los productos del almacen es: "
-                                        + obtenerValorProductosTotal() + DIVISA);
-                                break;
-                            default:
-                                System.out.println("Escribe solo numeros del 1 al 2");
-                                break;
-                        }
-                        break;
-                    default:
-                        System.out.println("Escribe solo numeros del 0 al 5");
-                        break;
-                }
-            } catch (Exception ex) {
-                throw ex;
+            System.out.println(menu(0));
+            int opcion = scanner.nextInt();
+            switch (opcion) {
+                case 0:
+                    salir = true;
+                    break;
+                case 1:
+                    menuProductos();
+                    break;
+                case 2:
+                    menuListaProductos();
+                    break;
+                case 3:
+                    menuOperaciones();
+                    break;
+                case 4:
+                    menuEmpresas();
+                    break;
+                case 5:
+                    menuFunciones();
+                    break;
+                default:
+                    System.out.println("Escribe solo numeros del 0 al 5");
+                    break;
             }
         }
-
     }
 
     /**
@@ -249,228 +61,90 @@ public class AlmacenVista {
      * 
      * @param numMenu numero del menu a mostrar
      */
-    public static void menu(int numMenu) {
+    public static String menu(int numMenu) {
         switch (numMenu) {
             // menu principal
             case 0:
-                System.out.println("\nALMACEN" + SEPARADOR + "\n0. Salir" + "\n1. Productos" + // menu(1)
+                return "\nALMACEN" + SEPARADOR + "\n0. Salir" + "\n1. Productos" + // menu(1)
                         "\n2. Listas de productos" + // menu(2)
                         "\n3. Operaciones" + // menu(3)
                         "\n4. Empresas" + // menu(4)
-                        "\n5. Funciones"); // menu(5)
-                break;
+                        "\n5. Funciones"; // menu(5)
             // menu 1. Productos
             case 1:
-                System.out.println(SEPARADOR + "\n1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos"
+                return SEPARADOR + "\n1. Mostrar informacion de un producto" + "\n2. Mostrar listado de productos"
                         + "\n3. Insertar nuevo producto" + "\n4. Editar informacion de un producto"
-                        + "\n5. Borrar un producto");
-                break;
+                        + "\n5. Borrar un producto";
             // menu 2. Listas de productos
             case 2:
-                System.out.println(SEPARADOR + "\n1. Mostrar informacion de una lista" + "\n2. Crear nueva lista"
-                        + "\n3. Editar lista" + "\n4. Eliminar lista");
-                break;
+                return SEPARADOR + "\n1. Mostrar informacion de una lista" + "\n2. Crear nueva lista"
+                        + "\n3. Editar lista" + "\n4. Eliminar lista";
             // menu 3. Operaciones
             case 3:
-                System.out.println(SEPARADOR + "\n1. Mostrar informacion de una operacion" + "\n2. Crear nueva operacion"
-                        + "\n3. Editar datos de una operacion");
-                break;
+                return SEPARADOR + "\n1. Mostrar informacion de una operacion" + "\n2. Crear nueva operacion"
+                        + "\n3. Editar datos de una operacion";
             // menu 4. Empresas
             case 4:
-                System.out.println(SEPARADOR + "\n1. Insertar nueva empresa" + "\n2. Mostrar informacion de una empresa"
+                return SEPARADOR + "\n1. Insertar nueva empresa" + "\n2. Mostrar informacion de una empresa"
                         + "\n3. Mostrar clientes" + "\n4. Mostrar proveedores"
-                        + "\n5. Modificar informacion de una empresa" + "\n6. Borrar empresa");
-                break;
+                        + "\n5. Modificar informacion de una empresa" + "\n6. Borrar empresa";
             // menu 5. Funciones
             case 5:
-                System.out.println(SEPARADOR + "\n1. Calcular indice de ocupacion del almacen" + "\n2. Calcular valor de productos del almacen");
-                break;
+                return SEPARADOR + "\n1. Calcular indice de ocupacion del almacen"
+                        + "\n2. Calcular valor de productos del almacen";
             default:
                 break;
         }
+        return null;
     }
 
     /**
-     * Funcion que pide informacion al usuario para crear una lista de productos
+     * Metodo que genera el menu de productos
      * 
-     * @return lista de productos creada
-     * @throws BbddException controlado
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
      */
-    public static ListaProductos obtenerListaProductos() throws BbddException {
-        int idProducto = -1;
-        ListaProductos lista = new ListaProductos();
-        HashMap<Integer, Integer> mapa = new HashMap<>();
-        while (idProducto != 0) {
-            System.out.println("Introduce el id del producto: ");
-            idProducto = scanner.nextInt();
-            Producto producto = almacenController.obtenerProducto(idProducto);
-            if (producto == null && idProducto != 0) {
-                System.out.println("El producto no existe dentro de la base de datos");
-            } else if (mapa.containsKey(idProducto)) {
-                System.out.println("El producto ya esta en la lista");
-            } else if (idProducto != 0) {
-                System.out.println("Introduce la cantidad del producto: ");
-                int cantidad = scanner.nextInt();
-                mapa.put(idProducto, cantidad);
-            }
+    public static void menuProductos() throws BbddException, AlmacenException, FicheroException {
+        System.out.println(menu(1));
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1:
+                Producto producto = buscarProducto();
+                System.out.println(
+                        producto != null ? producto.toString() : "No existe ningun producto con ese identificador");
+                break;
+            case 2:
+                System.out.println(listadoProductosToString());
+                break;
+            case 3:
+                insertarProducto();
+                break;
+            case 4:
+                modificarProducto();
+                break;
+            case 5:
+                eliminarProducto();
+                break;
+            default:
+                System.out.println("Introduce solo numeros entre 1 y 5");
+                break;
         }
-        lista.setLista(mapa);
-        return lista;
-    }
-
-    /**
-     * Funcion toString del listado de clientes
-     * 
-     * @return cadena formateada de la lista de clientes
-     * @throws BbddException controlado
-     */
-    private static String listadoClientesToString() throws BbddException {
-        ArrayList<Cliente> listado = almacenController.obtenerListadoCliente();
-        StringBuilder informacion = new StringBuilder("Listado de clientes:");
-        for (Cliente cliente : listado) {
-            informacion.append("\n-> Cif: " + cliente.getCif() + ", porcentaje de descuento: "
-                    + Math.round((1 - cliente.getPorcentajeDesc()) * 100) + "%");
-        }
-        return informacion.toString();
-    }
-
-    /**
-     * Funcion toString del listado de proveedores
-     * 
-     * @return cadena formateada de la lista de proveedores
-     * @throws BbddException controlado
-     */
-    private static String listadoProveedoresToString() throws BbddException {
-        ArrayList<Proveedor> listado = almacenController.obtenerListadoProveedor();
-        StringBuilder informacion = new StringBuilder("Listado de proveedores:");
-        for (Proveedor proveedor : listado) {
-            informacion
-                    .append("\n-> Cif: " + proveedor.getCif() + ", tipo de producto: " + proveedor.getTipoProducto());
-        }
-        return informacion.toString();
-    }
-
-    /**
-     * Funcion toString del listado de productos
-     * 
-     * @return cadena formateada de la lista de productos
-     * @throws BbddException controlado
-     */
-    private static String listadoProductosToString() throws BbddException {
-        ArrayList<Producto> listado = almacenController.obtenerListadoProducto();
-        StringBuilder informacion = new StringBuilder("Listado de productos:");
-        for (Producto producto : listado) {
-            informacion.append("\n-> Id del producto: " + producto.getIdProducto() + ", nombre del producto: "
-                    + producto.getNombre() + ", tipo del producto: " + producto.getTipo() + ", precio del producto: "
-                    + producto.getPrecioUnitario() + DIVISA);
-        }
-        return informacion.toString();
-    }
-
-    /**
-     * Funcion que calcula el valor total de todos los productos del almacen
-     * 
-     * @return valor total de los productos
-     * @throws BbddException controlado
-     */
-    private static double obtenerValorProductosTotal() throws BbddException {
-        return almacenController.obtenerValorProductosTotal();
-    }
-
-    /**
-     * Funcion que obtiene los huecos totales y los ocupados del almacen
-     * 
-     * @return [huecos ocupados, huecos totales]
-     * @throws BbddException controlado
-     */
-    public static Integer[] obtenerHuecosOcupados() throws BbddException {
-        return almacenController.obtenerHuecosOcupados();
     }
 
     /**
      * Funcion que pide al usuario el id de un producto y lo busca en la bbdd
      * 
      * @return producto encontrado
-     * @throws BbddException controlado
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
      */
-    private static Producto buscarProducto() throws BbddException {
+    private static Producto buscarProducto() throws BbddException, FicheroException {
+        ProductoController productoController = new ProductoController();
         System.out.println("Introduce el id del producto: ");
         int idProducto = scanner.nextInt();
-        return almacenController.obtenerProducto(idProducto);
-    }
-
-    /**
-     * Funcion que pide al usuario el id de una lista de productos
-     * 
-     * @return id de la lista introducida por el usuario
-     * @throws BbddException controlado
-     */
-    private static int getIdListaProductos() {
-        System.out.println("Introduce el id de la lista de productos: ");
-        return scanner.nextInt();
-    }
-
-    /**
-     * Funcion que pide al usuario el id de una lista de productos y la busca en la
-     * bbdd
-     * 
-     * @return listaProductos encontrada
-     * @throws BbddException controlado
-     */
-    private static ListaProductos buscarListaProductos(int idListaProductos) throws BbddException {
-        return almacenController.obtenerListaProductos(idListaProductos);
-    }
-
-    /**
-     * Funcion que pide al usuario el id de una lista de productos busca la
-     * operacion correspondiente en la bbdd
-     * 
-     * @return operacion encontrada
-     * @throws BbddException controlado
-     */
-    private static Operacion buscarOperacion(int idListaProductos) throws BbddException {
-        return almacenController.obtenerOperacion(idListaProductos);
-    }
-
-    /**
-     * Funcion que pide al usuario el cif de una empresa
-     * 
-     * @return cif introducido
-     * @throws BbddException controlado
-     */
-    private static String getCif() {
-        System.out.println("Introduce el cif de la empresa:");
-        return scanner.nextLine();
-    }
-
-    /**
-     * Funcion que pide al usuario el cif de una empresa y la busca en la bbdd
-     * 
-     * @return empresa encontrada
-     * @throws BbddException controlado
-     */
-    private static Empresa buscarEmpresa(String cif) throws BbddException {
-        return almacenController.obtenerEmpresa(cif);
-    }
-
-    /**
-     * Funcion que pide al usuario el cif de un cliente y la busca en la bbdd
-     * 
-     * @return cliente encontrado
-     * @throws BbddException controlado
-     */
-    private static Cliente buscarCliente(String cif) throws BbddException {
-        return almacenController.obtenerCliente(cif);
-    }
-
-    /**
-     * Funcion que pide al usuario el cif de un proveedor y la busca en la bbdd
-     * 
-     * @return proveedor encontrado
-     * @throws BbddException controlado
-     */
-    private static Proveedor buscarProveedor(String cif) throws BbddException {
-        return almacenController.obtenerProveedor(cif);
+        return productoController.buscar(idProducto);
     }
 
     /**
@@ -496,6 +170,264 @@ public class AlmacenVista {
     }
 
     /**
+     * Metodo que inserta un producto en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    private static void insertarProducto() throws BbddException, AlmacenException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        Producto producto = crearProducto(100);
+        productoController.insertar(producto);
+    }
+
+    /**
+     * Metodo que modifica un producto
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    private static void modificarProducto() throws BbddException, AlmacenException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        Producto producto = crearProducto(buscarProducto().getIdProducto());
+        productoController.modificar(producto);
+    }
+
+    /**
+     * Metodo que elimina un producto
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    private static void eliminarProducto() throws BbddException, AlmacenException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        Producto producto = buscarProducto();
+        productoController.eliminar(producto);
+    }
+
+    /**
+     * Metodo que genera el menu de la lista de productos
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    private static void menuListaProductos() throws BbddException, AlmacenException, FicheroException {
+        System.out.println(menu(2));
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1:
+                ListaProductos listaProductos = buscarListaProductos(getIdListaProductos());
+                System.out.println(listaProductos != null ? listaProductos.toString()
+                        : "No existe ninguna lista de productos con ese identificador");
+                break;
+            case 2:
+                insertarListaProductos();
+                break;
+            case 3:
+                modificarListaProductos();
+                break;
+            case 4:
+                eliminarListaProductos();
+                break;
+            default:
+                System.out.println("Introduce solo numeros entre 1 y 4");
+                break;
+        }
+    }
+
+    /**
+     * Funcion que pide al usuario el id de una lista de productos
+     * 
+     * @return id de la lista introducida por el usuario
+     * @throws BbddException controlado
+     */
+    private static int getIdListaProductos() {
+        System.out.println("Introduce el id de la lista de productos: ");
+        return scanner.nextInt();
+    }
+
+    /**
+     * Funcion que pide al usuario el id de una lista de productos y la busca en la
+     * bbdd
+     * 
+     * @return listaProductos encontrada
+     * @throws BbddException    controlado
+     * @throws FicheroException
+     */
+    private static ListaProductos buscarListaProductos(int idListaProductos) throws BbddException, FicheroException {
+        ListaProductosController listaProductosController = new ListaProductosController();
+        return listaProductosController.buscar(idListaProductos);
+    }
+
+    /**
+     * Funcion que pide informacion al usuario para crear una lista de productos
+     * 
+     * @return lista de productos creada
+     * @throws BbddException    controlado
+     * @throws FicheroException
+     */
+    public static ListaProductos obtenerListaProductos() throws BbddException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        int idProducto = -1;
+        ListaProductos lista = new ListaProductos();
+        HashMap<Integer, Integer> mapa = new HashMap<>();
+        while (idProducto != 0) {
+            System.out.println("Introduce el id del producto: ");
+            idProducto = scanner.nextInt();
+            Producto producto = productoController.buscar(idProducto);
+            if (producto == null && idProducto != 0) {
+                System.out.println("No existe ningun producto con ese identificador");
+            } else if (mapa.containsKey(idProducto)) {
+                System.out.println("El producto ya esta en la lista");
+            } else if (idProducto != 0) {
+                System.out.println("Introduce la cantidad del producto: ");
+                int cantidad = scanner.nextInt();
+                mapa.put(idProducto, cantidad);
+            }
+        }
+        lista.setLista(mapa);
+        return lista;
+    }
+
+    /**
+     * Metodo que inserta una lista de productos en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void insertarListaProductos() throws BbddException, FicheroException, AlmacenException {
+        ListaProductosController listaProductosController = new ListaProductosController();
+        ListaProductos listaProductos = obtenerListaProductos();
+        listaProductosController.insertar(listaProductos);
+    }
+
+    /**
+     * Metodo que modifica una lista de productos en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void modificarListaProductos() throws BbddException, AlmacenException, FicheroException {
+        ListaProductosController listaProductosController = new ListaProductosController();
+        int idListaProductos = getIdListaProductos();
+        buscarListaProductos(idListaProductos);
+        ListaProductos listaModificar = obtenerListaProductos();
+        listaModificar.setIdListaProducto(idListaProductos);
+        listaProductosController.modificar(listaModificar);
+    }
+
+    /**
+     * Metodo que elimina una lista de productos en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void eliminarListaProductos() throws BbddException, AlmacenException, FicheroException {
+        ListaProductosController listaProductosController = new ListaProductosController();
+        int idListaProductos = getIdListaProductos();
+        ListaProductos listaProductos = buscarListaProductos(idListaProductos);
+        listaProductosController.eliminar(listaProductos);
+    }
+
+    /**
+     * Funcion toString del listado de productos
+     * 
+     * @return cadena formateada de la lista de productos
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     */
+    private static String listadoProductosToString() throws BbddException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        ArrayList<Producto> listado = productoController.buscarTodos();
+        StringBuilder informacion = new StringBuilder("Listado de productos:");
+        for (Producto producto : listado) {
+            informacion.append("\n-> Id del producto: " + producto.getIdProducto() + ", nombre del producto: "
+                    + producto.getNombre() + ", tipo del producto: " + producto.getTipo() + ", precio del producto: "
+                    + producto.getPrecioUnitario() + DIVISA);
+        }
+        return informacion.toString();
+    }
+
+    /**
+     * Metodo que genera el menu de operaciones
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    public static void menuOperaciones() throws BbddException, AlmacenException, FicheroException {
+        menu(3);
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1:
+                Operacion operacion = buscarOperacion(getIdListaProductos());
+                System.out.println(
+                        operacion != null ? operacion.toString() : "No existe ninguna operacion con ese identificador");
+                break;
+            case 2:
+                insertarOperaciones();
+                break;
+            case 3:
+                modificarOperacion();
+                break;
+            default:
+                System.out.println("Introduce solo numeros entre 1 y 3");
+                break;
+        }
+    }
+
+    /**
+     * Funcion que pide al usuario el id de una lista de productos busca la
+     * operacion correspondiente en la bbdd
+     * 
+     * @return operacion encontrada
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     */
+    private static Operacion buscarOperacion(int idListaProductos) throws BbddException, FicheroException {
+        OperacionController operacionController = new OperacionController();
+        return operacionController.buscar(idListaProductos);
+    }
+
+    /**
+     * Metodo que inserta una operacion en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void insertarOperaciones() throws BbddException, AlmacenException, FicheroException {
+        OperacionController operacionController = new OperacionController();
+        int idListaProductos = getIdListaProductos();
+        Operacion operacion = crearOperacion(idListaProductos);
+        operacionController.insertar(operacion);
+    }
+
+    /**
+     * Metodo que modificar una operacion en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void modificarOperacion() throws BbddException, FicheroException, AlmacenException {
+        OperacionController operacionController = new OperacionController();
+        int idListaProductos = getIdListaProductos();
+        buscarOperacion(idListaProductos);
+        Operacion operacion = crearOperacion(idListaProductos);
+        operacionController.modificar(operacion);
+    }
+
+    /**
      * Funcion que pide al usuario los datos de una operacion para crearla
      * 
      * @param idListaProductos de la operacion a crear
@@ -517,6 +449,185 @@ public class AlmacenVista {
             tipo = scanner.nextInt();
         }
         return new Operacion(idListaProductos, idMuelle, fecha, tiposOperacion[tipo - 1], cif);
+    }
+
+    /**
+     * Metodo que genera el menu de empresas
+     * 
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
+     */
+    public static void menuEmpresas() throws BbddException, FicheroException, AlmacenException {
+        menu(4);
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1:
+                insertarEmpresa();
+                break;
+            case 2:
+                Empresa empresa = buscarEmpresa(getCif());
+                System.out.println(empresa != null ? empresa.toString() : "No existe ninguna empresa con ese CIF");
+                break;
+            case 3:
+                System.out.println(listadoClientesToString());
+                break;
+            case 4:
+                System.out.println(listadoProveedoresToString());
+                break;
+            case 5:
+                modificarEmpresa();
+                break;
+            case 6:
+                eliminarEmpresa();
+                break;
+            default:
+                System.out.println("Escribe solo numeros del 1 al 6");
+                break;
+        }
+    }
+
+    /**
+     * Funcion que pide al usuario el cif de una empresa
+     * 
+     * @return cif introducido
+     * @throws BbddException controlado
+     */
+    private static String getCif() {
+        System.out.println("Introduce el cif de la empresa:");
+        return scanner.nextLine();
+    }
+
+    /**
+     * Funcion que pide al usuario el cif de una empresa y la busca en la bbdd
+     * 
+     * @return empresa encontrada
+     * @throws BbddException    controlado
+     * @throws FicheroException
+     */
+    private static Empresa buscarEmpresa(String cif) throws BbddException, FicheroException {
+        EmpresaController empresaController = new EmpresaController();
+        return empresaController.buscar(cif);
+    }
+
+    /**
+     * Metodo que inserta una empresa en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void insertarEmpresa() throws BbddException, AlmacenException, FicheroException {
+        EmpresaController empresaController = new EmpresaController();
+        String cif = getCif();
+        Empresa empresa = crearEmpresa(cif);
+        empresaController.insertar(empresa);
+        insertarClienteProveedor(elegirTipoEmpresa(), cif);
+    }
+
+    /**
+     * Funcion que inserta un cliente/empresa en la bbdd
+     * 
+     * @param tipoEmpresa a crear 1-cliente 2-empresa
+     * @param cif         del cliente/proveedor
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException
+     */
+    private static void insertarClienteProveedor(int tipoEmpresa, String cif)
+            throws BbddException, AlmacenException, FicheroException {
+        if (tipoEmpresa == 1) {
+            ClienteController clienteController = new ClienteController();
+            clienteController.insertar(crearCliente(cif));
+        } else {
+            ProveedorController proveedorController = new ProveedorController();
+            proveedorController.insertar(crearProveedor(cif));
+        }
+    }
+
+    /**
+     * Metodo que modifica una empresa en la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void modificarEmpresa() throws BbddException, AlmacenException, FicheroException {
+        EmpresaController empresaController = new EmpresaController();
+        String cif = getCif();
+        Empresa empresa = crearEmpresa(cif);
+        empresaController.modificar(empresa);
+        modificarClienteProveedor(elegirTipoEmpresa(), empresa.getCif());
+    }
+
+    /**
+     * Funcion que modifica un cliente/empresa de la bbdd
+     * 
+     * @param tipoEmpresa a modificar 1-cliente 2-empresa
+     * @param cif         del cliente/proveedor
+     * @throws BbddException    controlado
+     * @throws AlmacenException controlado
+     * @throws FicheroException
+     */
+    private static void modificarClienteProveedor(int tipoEmpresa, String cif)
+            throws BbddException, AlmacenException, FicheroException {
+        if (tipoEmpresa == 1) {
+            ClienteController clienteController = new ClienteController();
+            clienteController.modificar(crearCliente(cif));
+        } else {
+            ProveedorController proveedorController = new ProveedorController();
+            proveedorController.modificar(crearProveedor(cif));
+        }
+    }
+
+    /**
+     * Funcion toString del listado de clientes
+     * 
+     * @return cadena formateada de la lista de clientes
+     * @throws BbddException    controlado
+     * @throws FicheroException
+     */
+    private static String listadoClientesToString() throws BbddException, FicheroException {
+        ClienteController clienteController = new ClienteController();
+        ArrayList<Cliente> listado = clienteController.buscarTodos();
+        StringBuilder informacion = new StringBuilder("Listado de clientes:");
+        for (Cliente cliente : listado) {
+            informacion.append("\n-> Cif: " + cliente.getCif() + ", porcentaje de descuento: "
+                    + Math.round((1 - cliente.getPorcentajeDesc()) * 100) + "%");
+        }
+        return informacion.toString();
+    }
+
+    /**
+     * Funcion toString del listado de proveedores
+     * 
+     * @return cadena formateada de la lista de proveedores
+     * @throws BbddException    controlado
+     * @throws FicheroException
+     */
+    private static String listadoProveedoresToString() throws BbddException, FicheroException {
+        ProveedorController proveedorController = new ProveedorController();
+        ArrayList<Proveedor> listado = proveedorController.buscarTodos();
+        StringBuilder informacion = new StringBuilder("Listado de proveedores:");
+        for (Proveedor proveedor : listado) {
+            informacion
+                    .append("\n-> Cif: " + proveedor.getCif() + ", tipo de producto: " + proveedor.getTipoProducto());
+        }
+        return informacion.toString();
+    }
+
+    /**
+     * Metodo que elimina una empresa de la bbdd
+     * 
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     * @throws AlmacenException controlado
+     */
+    public static void eliminarEmpresa() throws BbddException, AlmacenException, FicheroException {
+        EmpresaController empresaController = new EmpresaController();
+        Empresa empresa = buscarEmpresa(getCif());
+        empresaController.eliminar(empresa);
     }
 
     /**
@@ -582,32 +693,55 @@ public class AlmacenVista {
     }
 
     /**
-     * Funcion que inserta un cliente/empresa en la bbdd
+     * Metodo que genera el menu de funciones
      * 
-     * @param tipoEmpresa a crear 1-cliente 2-empresa
-     * @param cif         del cliente/proveedor
      * @throws BbddException    controlado
      * @throws AlmacenException controlado
+     * @throws FicheroException controlado
      */
-    private static void insertarClienteProveedor(int tipoEmpresa, String cif) throws BbddException, AlmacenException {
-        if (tipoEmpresa == 1)
-            almacenController.insertar(crearCliente(cif));
-        else
-            almacenController.insertar(crearProveedor(cif));
+    public static void menuFunciones() throws BbddException, FicheroException {
+        menu(5);
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+        switch (opcion) {
+            case 1:
+                Integer[] huecos = obtenerHuecos();
+                System.out.println("El numero de huecos ocupados del almacen es: " + huecos[0]
+                        + "\nEl numero total de huecos del almacen es: " + huecos[1]
+                        + "\nEl indice de ocupacion del almacen es: "
+                        + Math.floor(((double) (huecos[0]) / huecos[1]) * 10000) / 100 + "%");
+                break;
+            case 2:
+                System.out.println(
+                        "El valor total de los productos del almacen es: " + obtenerValorProductosTotal() + DIVISA);
+                break;
+            default:
+                System.out.println("Escribe solo numeros del 1 al 2");
+                break;
+        }
     }
 
     /**
-     * Funcion que modifica un cliente/empresa de la bbdd
+     * Funcion que devuelve el valor total de todos los productos del almacen
      * 
-     * @param tipoEmpresa a modificar 1-cliente 2-empresa
-     * @param cif         del cliente/proveedor
+     * @return valor total de los productos
      * @throws BbddException    controlado
-     * @throws AlmacenException controlado
+     * @throws FicheroException controlado
      */
-    private static void modificarClienteProveedor(int tipoEmpresa, String cif) throws BbddException, AlmacenException {
-        if (tipoEmpresa == 1)
-            almacenController.modificar(crearCliente(cif));
-        else
-            almacenController.modificar(crearProveedor(cif));
+    private static double obtenerValorProductosTotal() throws BbddException, FicheroException {
+        ProductoEstanteriaController productoEstanteriaController = new ProductoEstanteriaController();
+        return productoEstanteriaController.obtenerValorProductosTotal();
+    }
+
+    /**
+     * Funcion que devuelve los huecos ocupados y los libres del almacen
+     * 
+     * @return [huecos ocupados, huecos totales]
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     */
+    public static Integer[] obtenerHuecos() throws BbddException, FicheroException {
+        ProductoEstanteriaController productoEstanteriaController = new ProductoEstanteriaController();
+        return productoEstanteriaController.obtenerHuecos();
     }
 }

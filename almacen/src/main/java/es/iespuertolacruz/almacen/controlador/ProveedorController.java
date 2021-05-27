@@ -1,12 +1,28 @@
 package es.iespuertolacruz.almacen.controlador;
+
+import java.util.ArrayList;
+
+import es.iespuertolacruz.almacen.api.Proveedor;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
+import es.iespuertolacruz.almacen.exception.FicheroException;
 import es.iespuertolacruz.almacen.modelo.ProveedorModelo;
+
 public class ProveedorController {
     
     ProveedorModelo proveedorModelo;
+    EmpresaController empresaController;
 
-    public void validarProveedor(Proveedor proveedor) throws AlmacenException {
+    public ProveedorController() throws BbddException, FicheroException {
+        empresaController = new EmpresaController();
+        proveedorModelo = new ProveedorModelo();
+    }
+    
+    private boolean existe(Proveedor proveedor) throws BbddException {
+        return buscar(proveedor.getCif()) != null;
+    }
+
+    public void validar(Proveedor proveedor) throws AlmacenException {
         String mensaje = "";
         if (proveedor == null) {
             throw new AlmacenException("El cliente no puede ser nulo");
@@ -29,8 +45,9 @@ public class ProveedorController {
      * @throws AlmacenException controlado
      */
     public void insertar(Proveedor proveedor) throws BbddException, AlmacenException {
-        validarProveedor(proveedor);
-        proveedorModelo.insertar(proveedor);
+        validar(proveedor);
+        if(!existe(proveedor)) proveedorModelo.insertar(proveedor);
+        else throw new AlmacenException("El provedor ya existe en la base de datos");
     }
     /**
      * Metodo que elimina un proveedor de la bbdd
@@ -39,8 +56,9 @@ public class ProveedorController {
      * @throws AlmacenException controlado
      */
     public void eliminar(Proveedor proveedor) throws BbddException, AlmacenException {
-        validarProveedor(proveedor);
-        proveedorModelo.eliminar(proveedor);
+        validar(proveedor);
+        if(existe(proveedor)) proveedorModelo.eliminar(proveedor);
+        else throw new AlmacenException("El provedor no existe en la base de datos");
     }
     /**
      * Metodo que modifica un proveedor de la bbdd
@@ -49,24 +67,25 @@ public class ProveedorController {
      * @throws AlmacenException controlado
      */
     public void modificar(Proveedor proveedor) throws BbddException, AlmacenException {
-        validarProveedor(proveedor);
-        proveedorModelo.modificar(proveedor);
+        validar(proveedor);
+        if(existe(proveedor)) proveedorModelo.modificar(proveedor);
+        else throw new AlmacenException("El provedor no existe en la base de datos");
     }
     /**
      * Metodo que busca un proveedor en la bbdd
      * @param cif del proveedor a buscar
      * @throws BbddException controlado
      */
-    public Proveedor obtenerProveedor(String cif) throws BbddException {
-        return proveedorModelo.obtenerProveedor(cif);
+    public Proveedor buscar(String cif) throws BbddException {
+        return proveedorModelo.buscar(cif);
     }
     /**
      * Funcion que devuelve el listado de proveedores
      * @return arraylist de proveedores
      * @throws BbddException controlado
      */
-    public ArrayList<Proveedor> obtenerListadoProveedor() throws BbddException {
-        return proveedorModelo.obtenerListadoProveedor();
+    public ArrayList<Proveedor> buscarTodos() throws BbddException {
+        return proveedorModelo.buscarTodos();
     }
 
 
