@@ -31,7 +31,7 @@ public class MuelleModelo {
      * @throws BbddException error controlado
      */
     public void insertar(Muelle muelle) throws BbddException {
-        String sql = "INSERT INTO muelle (id_zona) VALUES('" + muelle.getIdZona() + "')";
+        String sql = "INSERT INTO muelle VALUES('" + muelle.getIdMuelle() + "', '" + muelle.getIdZona() + "')";
         persistencia.actualizar(sql);
     }
 

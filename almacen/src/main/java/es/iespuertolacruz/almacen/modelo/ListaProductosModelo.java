@@ -38,11 +38,10 @@ public class ListaProductosModelo {
      */
     public void insertar(ListaProductos listaProductos) throws BbddException {
         HashMap<Integer, Integer> mapaListaProductos = listaProductos.getLista();
-        int idListaProductos = obtenerMaxIdListaProductos() + 1;
         StringBuilder sql = new StringBuilder();
         mapaListaProductos.forEach((producto, cantidad) -> sql
                 .append("INSERT INTO lista_productos (id_lista_productos, id_producto, cantidad) VALUES ('"
-                        + idListaProductos + "'," + producto + ", " + cantidad + ");"));
+                        + listaProductos.getIdListaProductos() + "'," + producto + ", " + cantidad + ");"));
         persistencia.insertarElementos(sql.toString());
     }
 
@@ -160,7 +159,7 @@ public class ListaProductosModelo {
      * @return id mas alto
      * @throws BbddException controlado
      */
-    protected int obtenerMaxIdListaProductos() throws BbddException {
+    public int obtenerMaxIdListaProductos() throws BbddException {
         String sql = "SELECT MAX(id_lista_productos) AS max_id FROM lista_productos";
         int maxIdListaProductos = 0;
         ResultSet resultSet;

@@ -72,7 +72,7 @@ public class ProductoEstanteriaController {
      */
     public void modificar(ProductoEstanteria productoEstanteria) throws BbddException, AlmacenException {
         validar(productoEstanteria);
-        if(!existe(productoEstanteria)) productoEstanteriaModelo.modificar(productoEstanteria);
+        if(existe(productoEstanteria)) productoEstanteriaModelo.modificar(productoEstanteria);
         else throw new AlmacenException("El producto estanteria no existe en la base de datos");
     }
     /**
@@ -84,6 +84,7 @@ public class ProductoEstanteriaController {
     public ProductoEstanteria buscar(int idProducto, int idEstanteria) throws BbddException {
         return productoEstanteriaModelo.buscar(String.valueOf(idProducto), String.valueOf(idEstanteria));
     }
+    
     public double obtenerValorProductosTotal() throws BbddException {
         return productoEstanteriaModelo.obtenerValorProductosTotal();
     }

@@ -28,8 +28,8 @@ public class ListaProductosController {
         if (listaProductos.getIdListaProductos() <= 0) {
             mensaje += "El id de la listaProductos no puede ser menor o igual que 0\n";
         }
-        if (listaProductos.getLista().isEmpty()) {
-            mensaje += "La lista de productos de listaProductos no puede estar vacia\n";
+        if (listaProductos.getLista() == null || listaProductos.getLista().isEmpty()) {
+            mensaje += "La lista de productos de listaProductos no puede estar vacia o ser nula\n";
         }
         if(!mensaje.isBlank()) {
             throw new AlmacenException(mensaje);
@@ -47,7 +47,7 @@ public class ListaProductosController {
     public void insertar(ListaProductos listaProductos) throws BbddException, AlmacenException {
         validar(listaProductos);
         if(!existe(listaProductos)) listaProductosModelo.insertar(listaProductos);
-        else throw new AlmacenException("El listaProductos ya existe en la base de datos");
+        else throw new AlmacenException("La listaProductos ya existe en la base de datos");
     }
     /**
      * Metodo que elimina un listaProductos de la bbdd
@@ -58,7 +58,7 @@ public class ListaProductosController {
     public void eliminar(ListaProductos listaProductos) throws BbddException, AlmacenException {
         validar(listaProductos);
         if(existe(listaProductos)) listaProductosModelo.eliminar(listaProductos);
-        else throw new AlmacenException("El listaProductos no existe en la base de datos");
+        else throw new AlmacenException("La listaProductos no existe en la base de datos");
     }
     /**
      * Metodo que modifica un listaProductos de la bbdd
@@ -69,7 +69,7 @@ public class ListaProductosController {
     public void modificar(ListaProductos listaProductos) throws BbddException, AlmacenException {
         validar(listaProductos);
         if(existe(listaProductos)) listaProductosModelo.modificar(listaProductos);
-        else throw new AlmacenException("El listaProductos no existe en la base de datos");
+        else throw new AlmacenException("La listaProductos no existe en la base de datos");
     }
     /**
      * Metodo que busca un listaProductos en la bbdd
@@ -78,6 +78,10 @@ public class ListaProductosController {
      */
     public ListaProductos buscar(int idListaProductos) throws BbddException {
         return listaProductosModelo.buscar(String.valueOf(idListaProductos));
+    }
+
+    public int obtenerMaxIdListaProductos() throws BbddException {
+        return listaProductosModelo.obtenerMaxIdListaProductos();
     }
 
 

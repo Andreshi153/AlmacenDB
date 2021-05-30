@@ -1,5 +1,8 @@
 package es.iespuertolacruz.almacen.controlador;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import es.iespuertolacruz.almacen.api.Estanteria;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
@@ -20,6 +23,12 @@ public class EstanteriaController {
         return buscar(estanteria.getIdEstanteria()) != null;
     }
 
+    private boolean validarIdZona(char idZona) {
+        Pattern pattern = Pattern.compile("[A-Z]");
+        Matcher matcher = pattern.matcher(String.valueOf(idZona));
+        return matcher.matches();
+    }
+
     public void validar(Estanteria estanteria) throws AlmacenException {
         String mensaje = "";
         if (estanteria == null) {
@@ -28,7 +37,7 @@ public class EstanteriaController {
         if (estanteria.getIdEstanteria() <= 0) {
             mensaje += "El id de la estanteria no puede ser menor o igual que 0\n";
         }
-        if (estanteria.getIdZona() < 'A' || estanteria.getIdZona() > 'Z') {
+        if (!validarIdZona(estanteria.getIdZona())) {
             mensaje += "El id de la zona debe estar entre la A y la Z\n";
         }
         if (estanteria.getNumAlturas() <= 0) {

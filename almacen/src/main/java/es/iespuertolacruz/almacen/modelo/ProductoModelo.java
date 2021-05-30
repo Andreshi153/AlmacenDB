@@ -10,6 +10,10 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class ProductoModelo {
 
+    /**
+     *
+     */
+    private static final String SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA = "Se ha producido un error realizando la consulta";
     SqLiteBbdd persistencia;
     private static final String TABLA = "producto";
     private static final String CLAVE = "id_producto";
@@ -31,7 +35,7 @@ public class ProductoModelo {
      * @throws BbddException error controlado
      */
     public void insertar(Producto producto) throws BbddException {
-        String sql = "INSERT INTO producto (nombre, precio_unitario, tipo) VALUES ('" + producto.getNombre() + "',"
+        String sql = "INSERT INTO producto VALUES ('" + producto.getIdProducto() + "', '" + producto.getNombre() + "',"
                 + " '" + producto.getPrecioUnitario() + "', '" + producto.getTipo() + "')";
         persistencia.actualizar(sql);
     }
@@ -69,14 +73,14 @@ public class ProductoModelo {
      */
     public Producto buscar(String identificador) throws BbddException {
         Producto productoEncontrado = null;
-        String sql = "SELECT * FROM " + TABLA + " WHERE " + CLAVE + "='" + identificador + "'";
+        String sql = "SELECT * FROM " + TABLA + " WHERE " + CLAVE + " = '" + identificador + "'";
         ResultSet resultSet;
         ArrayList<Producto> lista = new ArrayList<>();
         try {
             resultSet = persistencia.buscarElementos(sql);
             lista = buscar(resultSet);
         } catch (BbddException e) {
-            throw new BbddException("Se ha producido un error realizando la consulta", e);
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, e);
         } finally {
             persistencia.closeConnection(persistencia.getConnection(), null, null);
         }
@@ -121,11 +125,28 @@ public class ProductoModelo {
             resultSet = persistencia.buscarElementos(sql);
             lista = buscar(resultSet);
         } catch (BbddException e) {
-            throw new BbddException("Se ha producido un error realizando la consulta", e);
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, e);
         } finally {
             persistencia.closeConnection(persistencia.getConnection(), null, null);
         }
         return lista;
+    }
+
+    public int obtenerIdUltimo() throws BbddException {
+        String sql = "SELECT " + CLAVE + " FROM " + TABLA + " ORDER BY " + CLAVE + " DESC LIMIT 1";
+        int idUltimo = 0;
+        ResultSet resultSet = null;
+        try {
+            resultSet = persistencia.buscarElementos(sql);
+            while (resultSet.next()) {
+                idUltimo = resultSet.getInt(CLAVE);
+            }
+        } catch (Exception exception) {
+            throw new BbddException(SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA, exception);
+        } finally {
+            persistencia.closeConnection(null, null, resultSet);
+        }
+        return idUltimo;
     }
 
 }

@@ -36,7 +36,7 @@ public class ProductoEstanteriaModelo {
      * @throws BbddException error controlado
      */
     public void insertar(ProductoEstanteria productoEstanteria) throws BbddException {
-        String sql = "INSERT INTO productoEstanteria VALUES ('" + productoEstanteria.getIdEstanteria() + "', '"
+        String sql = "INSERT INTO producto_estanteria VALUES ('" + productoEstanteria.getIdProducto() + "', '"
                 + productoEstanteria.getIdEstanteria() + "', '" + productoEstanteria.getCantidad() + "')";
         persistencia.actualizar(sql);
     }
@@ -49,7 +49,7 @@ public class ProductoEstanteriaModelo {
      */
     public void eliminar(ProductoEstanteria productoEstanteria) throws BbddException {
         String sql = "DELETE FROM producto_estanteria WHERE id_producto = '" + productoEstanteria.getIdProducto()
-                + "AND id_estanteria = '" + productoEstanteria.getIdEstanteria() + "'";
+                + "' AND id_estanteria = '" + productoEstanteria.getIdEstanteria() + "'";
         persistencia.actualizar(sql);
     }
 
@@ -61,7 +61,7 @@ public class ProductoEstanteriaModelo {
      */
     public void modificar(ProductoEstanteria productoEstanteria) throws BbddException {
         String sql = "UPDATE producto_estanteria SET cantidad = '" + productoEstanteria.getCantidad()
-                + "' WHERE id_producto = '" + productoEstanteria.getIdProducto() + "AND id_estanteria = '"
+                + "' WHERE id_producto = '" + productoEstanteria.getIdProducto() + "' AND id_estanteria = '"
                 + productoEstanteria.getIdEstanteria() + "'";
         persistencia.actualizar(sql);
     }

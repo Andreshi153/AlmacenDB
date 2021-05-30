@@ -31,7 +31,7 @@ public class EstanteriaModelo {
      * @throws BbddException error controlado
      */
     public void insertar(Estanteria estanteria) throws BbddException {
-        String sql = "INSERT INTO estanteria (idZona, numAlturas) VALUES ('" + estanteria.getIdZona() + "'," + " '"
+        String sql = "INSERT INTO estanteria (id_estanteria, id_zona, num_alturas) VALUES ('" + estanteria.getIdEstanteria() + "', '" + estanteria.getIdZona() + "'," + " '"
                 + estanteria.getNumAlturas() + "')";
         persistencia.actualizar(sql);
     }

@@ -142,9 +142,15 @@ public class AlmacenVista {
      */
     private static Producto buscarProducto() throws BbddException, FicheroException {
         ProductoController productoController = new ProductoController();
-        System.out.println("Introduce el id del producto: ");
-        int idProducto = scanner.nextInt();
+        int idProducto = introducirIdProducto();
         return productoController.buscar(idProducto);
+    }
+
+    private static int introducirIdProducto() throws BbddException, FicheroException {
+        ProductoController productoController = new ProductoController();
+        int idUltimo = productoController.obtenerIdUltimo();
+        System.out.println("Introduce el id del producto (el ultimo introducido es " + idUltimo + "): ");
+        return scanner.nextInt();
     }
 
     /**
@@ -178,7 +184,7 @@ public class AlmacenVista {
      */
     private static void insertarProducto() throws BbddException, AlmacenException, FicheroException {
         ProductoController productoController = new ProductoController();
-        Producto producto = crearProducto(100);
+        Producto producto = crearProducto(introducirIdProducto());
         productoController.insertar(producto);
     }
 
@@ -245,9 +251,12 @@ public class AlmacenVista {
      * 
      * @return id de la lista introducida por el usuario
      * @throws BbddException controlado
+     * @throws FicheroException
      */
-    private static int getIdListaProductos() {
-        System.out.println("Introduce el id de la lista de productos: ");
+    private static int getIdListaProductos() throws BbddException, FicheroException {
+        ListaProductosController listaProductosController = new ListaProductosController();
+        int idMax = listaProductosController.obtenerMaxIdListaProductos();
+        System.out.println("Introduce el id de la lista de productos (la ultima lista introducida es la " + idMax +"): ");
         return scanner.nextInt();
     }
 
@@ -275,6 +284,7 @@ public class AlmacenVista {
         ProductoController productoController = new ProductoController();
         int idProducto = -1;
         ListaProductos lista = new ListaProductos();
+        int idListaProductos = getIdListaProductos();
         HashMap<Integer, Integer> mapa = new HashMap<>();
         while (idProducto != 0) {
             System.out.println("Introduce el id del producto: ");
@@ -290,6 +300,7 @@ public class AlmacenVista {
                 mapa.put(idProducto, cantidad);
             }
         }
+        lista.setIdListaProducto(idListaProductos);
         lista.setLista(mapa);
         return lista;
     }

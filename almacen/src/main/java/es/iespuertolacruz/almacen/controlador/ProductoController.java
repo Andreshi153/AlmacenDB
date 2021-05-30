@@ -28,13 +28,13 @@ public class ProductoController {
         if (producto.getIdProducto() < 1) {
             mensaje += "El id del producto no puede ser inferior a 1\n";
         }
-        if (producto.getNombre().isEmpty() || producto.getNombre() == null) {
+        if (producto.getNombre() == null || producto.getNombre().isEmpty()) {
             mensaje += "El nombre del producto no puede ser nulo o vacio\n";
         }
         if (producto.getPrecioUnitario() <= 0) {
             mensaje += "El precio del producto no puede ser menor o igual que 0\n";
         }
-        if (producto.getTipo().isEmpty() || producto.getTipo() == null) {
+        if (producto.getTipo() == null || producto.getTipo().isEmpty()) {
             mensaje += "El tipo del producto no puede ser nulo o vacio\n";
         }
         if(!mensaje.isBlank()) {
@@ -88,5 +88,14 @@ public class ProductoController {
 
     public ArrayList<Producto> buscarTodos() throws BbddException {
         return productoModelo.buscarTodos();
+    }
+
+    /**
+     * Funcion que retorna el id del ultimo producto insertado
+     * @return id producto
+     * @throws BbddException controlado
+     */
+    public int obtenerIdUltimo() throws BbddException {
+        return productoModelo.obtenerIdUltimo();
     }
 }
