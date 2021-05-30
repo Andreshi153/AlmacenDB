@@ -1,4 +1,4 @@
-package es.iespuertolacruz.almacen;
+package es.iespuertolacruz.almacen.controlador;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,12 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import es.iespuertolacruz.almacen.api.Cliente;
-import es.iespuertolacruz.almacen.controlador.ClienteController;
-
 public class ClienteControllerTest {
 
     static ClienteController clienteController;
-    Cliente cliente1 = new Cliente("00000000X", 0.85f);
+    Cliente cliente1 = new Cliente("X00000000", 0.85f);
     Cliente cliente2 = new Cliente(cliente1.getCif(), 0.9f);
     Cliente cliente3 = new Cliente("X12345678", 1f);
 

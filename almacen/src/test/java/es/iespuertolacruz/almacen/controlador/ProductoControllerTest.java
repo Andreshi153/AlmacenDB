@@ -1,4 +1,4 @@
-package es.iespuertolacruz.almacen;
+package es.iespuertolacruz.almacen.controlador;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import es.iespuertolacruz.almacen.api.Producto;
-import es.iespuertolacruz.almacen.controlador.ProductoController;
-
 public class ProductoControllerTest {
 
     static ProductoController productoController;
@@ -112,13 +110,13 @@ public class ProductoControllerTest {
             assertTrue(ex.getMessage().contains("El id del producto no puede ser inferior a 1"));
             assertTrue(ex.getMessage().contains("El nombre del producto no puede ser nulo"));
             assertTrue(ex.getMessage().contains("El precio del producto no puede ser menor o igual que 0"));
-            assertTrue(ex.getMessage().contains("El tipo del producto no puede ser nulo o vacio"));
+            assertTrue(ex.getMessage().contains("El tipo del producto no puede ser nulo o no valido"));
         }
         try {
             productoController.validar(new Producto(1, "", 1, ""));
         } catch (Exception ex) {
             assertTrue(ex.getMessage().contains("El nombre del producto no puede ser nulo o vacio"));
-            assertTrue(ex.getMessage().contains("El tipo del producto no puede ser nulo o vacio"));
+            assertTrue(ex.getMessage().contains("El tipo del producto no puede ser nulo o no valido"));
         }
     }
 }

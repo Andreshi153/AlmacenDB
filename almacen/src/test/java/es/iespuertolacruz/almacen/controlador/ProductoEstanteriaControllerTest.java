@@ -1,4 +1,4 @@
-package es.iespuertolacruz.almacen;
+package es.iespuertolacruz.almacen.controlador;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import es.iespuertolacruz.almacen.api.ProductoEstanteria;
-import es.iespuertolacruz.almacen.controlador.ProductoEstanteriaController;
-
 public class ProductoEstanteriaControllerTest {
 
     static ProductoEstanteriaController productoEstanteriaController;

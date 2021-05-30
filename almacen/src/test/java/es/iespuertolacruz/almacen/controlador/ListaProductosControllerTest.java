@@ -1,12 +1,10 @@
-package es.iespuertolacruz.almacen;
+package es.iespuertolacruz.almacen.controlador;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import es.iespuertolacruz.almacen.api.ListaProductos;
-import es.iespuertolacruz.almacen.controlador.ListaProductosController;
-
 public class ListaProductosControllerTest {
 
     static ListaProductosController listaProductosController;
