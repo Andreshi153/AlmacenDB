@@ -26,7 +26,7 @@ public class ClienteController {
         if (cliente == null) {
             throw new AlmacenException("El cliente no puede ser nulo");
         }
-        if (cliente.getCif().isEmpty() || cliente.getCif() == null) {
+        if (cliente.getCif() == null || cliente.getCif().isEmpty()) {
             mensaje += "El cif del cliente no puede ser nulo o vacio\n";
         }
         if (cliente.getPorcentajeDesc() < 0) {
@@ -56,7 +56,8 @@ public class ClienteController {
      */
     public void eliminar(Cliente cliente) throws BbddException, AlmacenException {
         validar(cliente);
-        clienteModelo.eliminar(cliente);
+        if(existe(cliente)) clienteModelo.eliminar(cliente);
+        else throw new AlmacenException("El cliente no existe en la base de datos");
     }
     /**
      * Metodo que modifica un cliente de la bbdd
@@ -66,7 +67,8 @@ public class ClienteController {
      */
     public void modificar(Cliente cliente) throws BbddException, AlmacenException {
         validar(cliente);
-        clienteModelo.modificar(cliente);
+        if(existe(cliente)) clienteModelo.modificar(cliente);
+        else throw new AlmacenException("El cliente no existe en la base de datos");
     }
     /**
      * Metodo que busca un cliente en la bbdd
