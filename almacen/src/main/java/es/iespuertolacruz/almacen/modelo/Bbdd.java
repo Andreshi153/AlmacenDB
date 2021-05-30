@@ -1,11 +1,13 @@
 package es.iespuertolacruz.almacen.modelo;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import es.iespuertolacruz.almacen.exception.BbddException;
 import es.iespuertolacruz.almacen.exception.FicheroException;
@@ -21,8 +23,8 @@ public class Bbdd {
     protected String usuario;
     protected String password;
 
-    public Bbdd(String nombreTabla, String clave, String driver, String url, String usuario,
-            String password) throws BbddException, FicheroException {
+    public Bbdd(String nombreTabla, String clave, String driver, String url, String usuario, String password)
+            throws BbddException, FicheroException {
         this.nombreTabla = nombreTabla;
         this.clave = clave;
         this.driver = driver;
@@ -40,10 +42,29 @@ public class Bbdd {
      * @throws FicheroException controlado
      */
     private void inicializarTabla(String nombreTabla) throws BbddException, FicheroException {
-        String crearTabla = new Fichero().leer("almacen/resources/sql/sqlite/" + nombreTabla + ".crear.sql");
-        actualizar(crearTabla);
-        String insertElemento = new Fichero().leer("almacen/resources/sql/sqlite/" + nombreTabla + ".insertar.sql");
-        insertarElementos(insertElemento);
+        DatabaseMetaData databaseMetaData;
+        Connection connection = null;
+        ResultSet resultSet = null;
+        ArrayList<String> listaTablas = new ArrayList<>();
+        try {
+            connection = getConnection();
+            databaseMetaData = connection.getMetaData();
+            resultSet = databaseMetaData.getTables(null, null, null, new String[] { "TABLE" });
+            while (resultSet.next()) {
+                listaTablas.add(resultSet.getString("TABLE_NAME"));
+            }
+            if (!listaTablas.contains(nombreTabla)) {
+                String crearTabla = new Fichero().leer("resources/sql/sqlite/" + nombreTabla + ".crear.sql");
+                actualizar(crearTabla);
+                String insertElemento = new Fichero().leer("resources/sql/sqlite/" + nombreTabla + ".insertar.sql");
+                insertarElementos(insertElemento);
+            }
+
+        } catch (Exception e) {
+            throw new BbddException("Se ha producido un error en la inicializacion de la BBDD", e);
+        } finally {
+            closeConnection(connection, null, resultSet);
+        }
     }
 
     /**
@@ -89,7 +110,8 @@ public class Bbdd {
      * @param resultSet
      * @throws BbddException
      */
-    protected void closeConnection(Connection connection, Statement statement, ResultSet resultSet) throws BbddException {
+    protected void closeConnection(Connection connection, Statement statement, ResultSet resultSet)
+            throws BbddException {
         try {
             if (resultSet != null) {
                 resultSet.close();
@@ -127,22 +149,23 @@ public class Bbdd {
     }
 
     /**
-    * Funcion que realiza una consulta sobre una sentencia sql dada
-    * @param sql de la consulta
-    * @return lista resultados (0..n) Usuasios
-    * @throws PersistenciaException error controlado
-    */
+     * Funcion que realiza una consulta sobre una sentencia sql dada
+     * 
+     * @param sql de la consulta
+     * @return lista resultados (0..n) Usuasios
+     * @throws PersistenciaException error controlado
+     */
     protected ResultSet buscarElementos(String sql) throws BbddException {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         Connection connection = null;
         try {
-           connection = getConnection();
-           statement = connection.prepareStatement(sql);
-           resultSet = statement.executeQuery();
+            connection = getConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
         } catch (SQLException exception) {
-           throw new BbddException("Se ha producido un error en la busqueda", exception);
+            throw new BbddException("Se ha producido un error en la busqueda", exception);
         }
         return resultSet;
-     }
+    }
 }
