@@ -12,22 +12,38 @@ public class ClienteController {
     ClienteModelo clienteModelo;
     EmpresaController empresaController;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public ClienteController() throws BbddException, FicheroException {
         empresaController = new EmpresaController();
         clienteModelo = new ClienteModelo();
     }
 
+    /**
+     * Funcion que verifica si existe un cliente en la bbdd
+     * @param cliente a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(Cliente cliente) throws BbddException {
         return buscar(cliente.getCif()) != null;
     }
     
+    /**
+     * Funcion que valida un cliente
+     * @param cliente a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Cliente cliente) throws AlmacenException {
         String mensaje = "";
         if (cliente == null) {
             throw new AlmacenException("El cliente no puede ser nulo");
         }
-        if (cliente.getCif() == null || cliente.getCif().isEmpty()) {
-            mensaje += "El cif del cliente no puede ser nulo o vacio\n";
+        if (cliente.getCif() == null || !Validaciones.validarCif(cliente.getCif())) {
+            mensaje += "El cif del cliente no puede ser nulo o no valido\n";
         }
         if (cliente.getPorcentajeDesc() < 0) {
             mensaje += "El porcentaje de descuento del cliente no puede ser menor que 0\n";

@@ -31,7 +31,8 @@ public class MuelleModelo {
      * @throws BbddException error controlado
      */
     public void insertar(Muelle muelle) throws BbddException {
-        String sql = "INSERT INTO muelle VALUES('" + muelle.getIdMuelle() + "', '" + muelle.getIdZona() + "')";
+        String sql = "INSERT INTO muelle VALUES(" + muelle.getIdMuelle() + ", '" + muelle.getIdZona() + "', "  
+        + (muelle.getDisponible() ? "true" : "false") + ")";
         persistencia.actualizar(sql);
     }
 
@@ -53,8 +54,8 @@ public class MuelleModelo {
      * @throws BbddException error controlado
      */
     public void modificar(Muelle muelle) throws BbddException {
-        String sql = "UPDATE muelle SET id_zona = '" + muelle.getIdZona() + "', disponible = '"
-                + (muelle.getDisponible() ? "true" : "false") + "', WHERE id_muelle = " + muelle.getIdMuelle() + "'";
+        String sql = "UPDATE muelle SET id_zona = '" + muelle.getIdZona() + "', disponible = "
+                + (muelle.getDisponible() ? "true" : "false") + " WHERE id_muelle = '" + muelle.getIdMuelle() + "'";
         persistencia.actualizar(sql);
     }
 
@@ -110,6 +111,11 @@ public class MuelleModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todos los muelles en la bbdd
+     * @return arraylist de muelles
+     * @throws BbddException controlado
+     */
     public ArrayList<Muelle> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

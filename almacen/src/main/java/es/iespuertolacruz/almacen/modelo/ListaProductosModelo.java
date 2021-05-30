@@ -11,9 +11,6 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class ListaProductosModelo {
 
-    /**
-     *
-     */
     private static final String SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA = "Se ha producido un error realizando la consulta";
     SqLiteBbdd persistencia;
     private static final String TABLA = "lista_productos";
@@ -119,6 +116,11 @@ public class ListaProductosModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todas las listaproductos en la bbdd
+     * @return arraylist de listaproductos
+     * @throws BbddException controlado
+     */
     public ArrayList<ListaProductos> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;
@@ -134,6 +136,12 @@ public class ListaProductosModelo {
         return lista;
     }
 
+    /**
+     * Funcion que obtiene el hashmap de una lista de productos
+     * @param idListaProductos a buscar
+     * @return hashmap<idProdcto, cantidad>
+     * @throws BbddException controlado
+     */
     private HashMap<Integer, Integer> obtenerHashMapListaProducto(int idListaProductos) throws BbddException {
         String sql = "SELECT id_producto, cantidad FROM lista_productos WHERE id_lista_productos = "
                         + idListaProductos;

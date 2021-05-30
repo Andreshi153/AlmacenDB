@@ -10,9 +10,6 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class ProductoEstanteriaModelo {
 
-    /**
-     *
-     */
     private static final String SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA = "Se ha producido un error realizando la consulta";
     SqLiteBbdd persistencia;
     private static final String TABLA = "producto_estanteria";
@@ -119,6 +116,12 @@ public class ProductoEstanteriaModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todos los productosEstanteria en la bbdd
+     * 
+     * @return arraylist de productosEstanteria
+     * @throws BbddException controlado
+     */
     public ArrayList<ProductoEstanteria> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;
@@ -136,6 +139,7 @@ public class ProductoEstanteriaModelo {
 
     /**
      * Funcion que calcula el valor total de todos los productos del almacen
+     * 
      * @return valor total de los productos
      * @throws BbddException controlado
      */
@@ -153,11 +157,12 @@ public class ProductoEstanteriaModelo {
         } finally {
             persistencia.closeConnection(null, null, resultSet);
         }
-        return Math.floor(valorTotal*100)/100;
+        return Math.floor(valorTotal * 100) / 100;
     }
 
     /**
      * Funcion que obtiene los huecos ocupados del almacen
+     * 
      * @return huecos ocupados
      * @throws BbddException controlado
      */
@@ -180,6 +185,7 @@ public class ProductoEstanteriaModelo {
 
     /**
      * Funcion que obtiene los huecos ocupados del almacen
+     * 
      * @return huecos ocupados
      * @throws BbddException controlado
      */

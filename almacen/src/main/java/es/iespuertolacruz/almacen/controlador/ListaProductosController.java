@@ -11,15 +11,31 @@ public class ListaProductosController {
     ListaProductosModelo listaProductosModelo;
     ProductoController productoController;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public ListaProductosController() throws BbddException, FicheroException {
         productoController = new ProductoController();
         listaProductosModelo = new ListaProductosModelo();
     }
 
+    /**
+     * Funcion que verifica si existe una listaProductos en la bbdd
+     * @param listaProductos a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(ListaProductos listaProductos) throws BbddException {
         return buscar(listaProductos.getIdListaProductos()) != null;
     }
 
+    /**
+     * Funcion que valida una listaProductos
+     * @param listaProductos a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(ListaProductos listaProductos) throws AlmacenException {
         String mensaje = "";
         if (listaProductos == null) {
@@ -80,9 +96,12 @@ public class ListaProductosController {
         return listaProductosModelo.buscar(String.valueOf(idListaProductos));
     }
 
+    /**
+     * Funcion que obtiene el id mas alto de la lista de productos en la bbdd
+     * @return idproducto mas alto
+     * @throws BbddException controlado
+     */
     public int obtenerMaxIdListaProductos() throws BbddException {
         return listaProductosModelo.obtenerMaxIdListaProductos();
     }
-
-
 }

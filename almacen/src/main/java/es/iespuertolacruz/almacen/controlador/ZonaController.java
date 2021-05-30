@@ -10,23 +10,40 @@ public class ZonaController {
     
     ZonaModelo zonaModelo;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public ZonaController() throws BbddException, FicheroException {
         zonaModelo = new ZonaModelo();
     }
+
+    /**
+     * Funcion que verifica si existe una zona en la bbdd
+     * @param zona a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(Zona zona) throws BbddException {
         return buscar(zona.getIdZona()) != null;
     }
 
+    /**
+     * Funcion que valida una zona
+     * @param zona a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Zona zona) throws AlmacenException {
         String mensaje = "";
         if (zona == null) {
             throw new AlmacenException("La zona no puede ser nula");
         }
-        if (zona.getIdZona() < 'A' || zona.getIdZona() > 'Z') {
+        if (!Validaciones.validarZona(zona.getIdZona())) {
             mensaje += "El id de la zona debe estar entre la A y la Z\n";
         }
-        if (zona.getTipo().isEmpty() || zona.getTipo() == null) {
-            mensaje += "El tipo de la zona no puede ser nulo o vacio\n";
+        if (zona.getTipo() == null || !Validaciones.validarTipoProducto(zona.getTipo())) {
+            mensaje += "El tipo de la zona no puede ser nulo o no valido\n";
         }
         if(!mensaje.isBlank()) {
             throw new AlmacenException(mensaje);

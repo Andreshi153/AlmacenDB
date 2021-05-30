@@ -16,7 +16,8 @@ public class OperacionModelo {
 
     /**
      * Constructor de la clase
-     * @throws BbddException controlado
+     * 
+     * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
     public OperacionModelo() throws BbddException, FicheroException {
@@ -25,6 +26,7 @@ public class OperacionModelo {
 
     /**
      * Metodo encargado de realizar la insercion de una operacion
+     * 
      * @param operacion a insertar
      * @throws BbddException error controlado
      */
@@ -37,6 +39,7 @@ public class OperacionModelo {
 
     /**
      * Metodo encargado de eliminar una operacion
+     * 
      * @param operacion a eliminar
      * @throws BbddException error controlado
      */
@@ -47,6 +50,7 @@ public class OperacionModelo {
 
     /**
      * Metodo encargado de realizar la modificacion de una operacion
+     * 
      * @param operacion a modificar
      * @throws BbddException error controlado
      */
@@ -56,7 +60,7 @@ public class OperacionModelo {
                 + operacion.getCif() + "' WHERE id_lista_productos = '" + operacion.getIdListaProductos() + "'";
         persistencia.actualizar(sql);
     }
-    
+
     /**
      * Funcion que busca un operacion en la bbdd
      * 
@@ -96,11 +100,11 @@ public class OperacionModelo {
         try {
             while (resultSet.next()) {
                 int idListaProductos = resultSet.getInt(CLAVE);
-                    int idMuelle = resultSet.getInt("id_muelle");
-                    String fecha = resultSet.getString("fecha");
-                    String tipoOperacion = resultSet.getString("tipo_operacion");
-                    String cif = resultSet.getString("cif");
-                    Operacion operacion = new Operacion(idListaProductos, idMuelle, fecha, tipoOperacion, cif);
+                int idMuelle = resultSet.getInt("id_muelle");
+                String fecha = resultSet.getString("fecha");
+                String tipoOperacion = resultSet.getString("tipo_operacion");
+                String cif = resultSet.getString("cif");
+                Operacion operacion = new Operacion(idListaProductos, idMuelle, fecha, tipoOperacion, cif);
                 lista.add(operacion);
             }
         } catch (SQLException e) {
@@ -111,6 +115,12 @@ public class OperacionModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todas las operaciones en la bbdd
+     * 
+     * @return arraylist de operaciones
+     * @throws BbddException controlado
+     */
     public ArrayList<Operacion> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

@@ -12,14 +12,30 @@ public class ProductoController {
     
     ProductoModelo productoModelo;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public ProductoController() throws BbddException, FicheroException {
         productoModelo = new ProductoModelo();
     }
 
+    /**
+     * Funcion que verifica si existe un producto en la bbdd
+     * @param producto a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(Producto producto) throws BbddException {
         return buscar(producto.getIdProducto()) != null;
     }
 
+    /**
+     * Funcion que valida un producto
+     * @param producto a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Producto producto) throws AlmacenException {
         String mensaje = "";
         if (producto == null) {
@@ -34,8 +50,8 @@ public class ProductoController {
         if (producto.getPrecioUnitario() <= 0) {
             mensaje += "El precio del producto no puede ser menor o igual que 0\n";
         }
-        if (producto.getTipo() == null || producto.getTipo().isEmpty()) {
-            mensaje += "El tipo del producto no puede ser nulo o vacio\n";
+        if (producto.getTipo() == null || !Validaciones.validarTipoProducto(producto.getTipo())) {
+            mensaje += "El tipo del producto no puede ser nulo o no valido\n";
         }
         if(!mensaje.isBlank()) {
             throw new AlmacenException(mensaje);
@@ -86,6 +102,11 @@ public class ProductoController {
         return productoModelo.buscar(String.valueOf(idProducto));
     }
 
+    /**
+     * Funcion que busca todos los productos de la bbdd
+     * @return arraylist de productos
+     * @throws BbddException controlado
+     */
     public ArrayList<Producto> buscarTodos() throws BbddException {
         return productoModelo.buscarTodos();
     }

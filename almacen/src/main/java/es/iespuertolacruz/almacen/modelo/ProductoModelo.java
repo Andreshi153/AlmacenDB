@@ -10,9 +10,6 @@ import es.iespuertolacruz.almacen.exception.FicheroException;
 
 public class ProductoModelo {
 
-    /**
-     *
-     */
     private static final String SE_HA_PRODUCIDO_UN_ERROR_REALIZANDO_LA_CONSULTA = "Se ha producido un error realizando la consulta";
     SqLiteBbdd persistencia;
     private static final String TABLA = "producto";
@@ -117,6 +114,12 @@ public class ProductoModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todos los productos en la bbdd
+     * 
+     * @return arraylist de productos
+     * @throws BbddException controlado
+     */
     public ArrayList<Producto> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;
@@ -132,6 +135,11 @@ public class ProductoModelo {
         return lista;
     }
 
+    /**
+     * Funcion que obtiene el id del producto con el id mas alto de la bbdd
+     * @return id del producto
+     * @throws BbddException controlado
+     */
     public int obtenerIdUltimo() throws BbddException {
         String sql = "SELECT " + CLAVE + " FROM " + TABLA + " ORDER BY " + CLAVE + " DESC LIMIT 1";
         int idUltimo = 0;

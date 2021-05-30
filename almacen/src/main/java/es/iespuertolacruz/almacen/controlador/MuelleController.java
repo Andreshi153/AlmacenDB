@@ -11,24 +11,40 @@ public class MuelleController {
     MuelleModelo muelleModelo;
     ZonaController zonaController;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public MuelleController() throws BbddException, FicheroException {
         zonaController = new ZonaController();
         muelleModelo = new MuelleModelo();
     }
 
+    /**
+     * Funcion que verifica si existe un muelle en la bbdd
+     * @param muelle a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(Muelle muelle) throws BbddException {
-        return buscar(muelle.getIdZona()) != null;
+        return buscar(muelle.getIdMuelle()) != null;
     }
 
+    /**
+     * Funcion que valida un muelle
+     * @param muelle a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Muelle muelle) throws AlmacenException {
         String mensaje = "";
         if (muelle == null) {
-            throw new AlmacenException("El muelle no puede ser nula");
+            throw new AlmacenException("El muelle no puede ser nulo");
         }
         if (muelle.getIdMuelle() <= 0) {
             mensaje += "El id del muelle no puede ser menor o igual que 0\n";
         }
-        if (muelle.getIdZona() < 'A' || muelle.getIdZona() > 'Z') {
+        if (!Validaciones.validarZona(muelle.getIdZona())) {
             mensaje += "El id de la zona debe estar entre la A y la Z";
         }
         if(!mensaje.isBlank()) {

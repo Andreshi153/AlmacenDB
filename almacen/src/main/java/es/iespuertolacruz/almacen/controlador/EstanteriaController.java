@@ -1,8 +1,5 @@
 package es.iespuertolacruz.almacen.controlador;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import es.iespuertolacruz.almacen.api.Estanteria;
 import es.iespuertolacruz.almacen.exception.AlmacenException;
 import es.iespuertolacruz.almacen.exception.BbddException;
@@ -14,21 +11,31 @@ public class EstanteriaController {
     EstanteriaModelo estanteriaModelo;
     ZonaController zonaController;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public EstanteriaController() throws BbddException, FicheroException {
         zonaController = new ZonaController();
         estanteriaModelo = new EstanteriaModelo();
     }
 
+    /**
+     * Funcion que verifica si existe una estanteria en la bbdd
+     * @param estanteria a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     public boolean existe(Estanteria estanteria) throws BbddException {
         return buscar(estanteria.getIdEstanteria()) != null;
     }
 
-    private boolean validarIdZona(char idZona) {
-        Pattern pattern = Pattern.compile("[A-Z]");
-        Matcher matcher = pattern.matcher(String.valueOf(idZona));
-        return matcher.matches();
-    }
-
+    /**
+     * Funcion que valida una estanteria
+     * @param estanteria a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Estanteria estanteria) throws AlmacenException {
         String mensaje = "";
         if (estanteria == null) {
@@ -37,7 +44,7 @@ public class EstanteriaController {
         if (estanteria.getIdEstanteria() <= 0) {
             mensaje += "El id de la estanteria no puede ser menor o igual que 0\n";
         }
-        if (!validarIdZona(estanteria.getIdZona())) {
+        if (!Validaciones.validarZona(estanteria.getIdZona())) {
             mensaje += "El id de la zona debe estar entre la A y la Z\n";
         }
         if (estanteria.getNumAlturas() <= 0) {

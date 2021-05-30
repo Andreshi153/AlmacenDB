@@ -54,7 +54,7 @@ public class ZonaModelo {
      * @throws BbddException error controlado
      */
     public void modificar(Zona zona) throws BbddException {
-        String sql = "UPDATE zona SET id_zona = '" + zona.getTipo() + "'" + " WHERE id_zona = '" + zona.getIdZona()
+        String sql = "UPDATE zona SET tipo = '" + zona.getTipo() + "' WHERE id_zona = '" + zona.getIdZona()
                 + "'";
         persistencia.actualizar(sql);
     }
@@ -110,6 +110,11 @@ public class ZonaModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todas las zonas en la bbdd
+     * @return arraylist de zonas
+     * @throws BbddException controlado
+     */
     public ArrayList<Zona> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

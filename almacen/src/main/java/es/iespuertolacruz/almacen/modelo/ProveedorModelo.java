@@ -86,6 +86,12 @@ public class ProveedorModelo {
         return proveedorEncontrado;
     }
 
+    /**
+     * Funcion encargada de buscar todos los proveedores en la bbdd
+     * 
+     * @return arraylist de proveedores
+     * @throws BbddException controlado
+     */
     public ArrayList<Proveedor> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

@@ -112,6 +112,11 @@ public class EstanteriaModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todas las estanterias en la bbdd
+     * @return arraylist de estanterias
+     * @throws BbddException controlado
+     */
     public ArrayList<Estanteria> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

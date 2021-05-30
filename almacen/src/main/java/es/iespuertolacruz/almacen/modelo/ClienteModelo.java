@@ -109,6 +109,11 @@ public class ClienteModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todos los clientes en la bbdd
+     * @return arraylist de clientes
+     * @throws BbddException controlado
+     */
     public ArrayList<Cliente> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

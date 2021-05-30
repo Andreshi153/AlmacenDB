@@ -19,7 +19,7 @@ public class Zona {
      * @return idZona de la zona
      */
     public char getIdZona() {
-        return this.getIdZona();
+        return this.idZona;
     }
 
     /**

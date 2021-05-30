@@ -114,6 +114,11 @@ public class EmpresaModelo {
         return lista;
     }
 
+    /**
+     * Funcion encargada de buscar todos las empresas en la bbdd
+     * @return arraylist de empresas
+     * @throws BbddException controlado
+     */
     public ArrayList<Empresa> buscarTodos() throws BbddException {
         String sql = "SELECT * FROM " + TABLA;
         ResultSet resultSet;

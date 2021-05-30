@@ -13,25 +13,41 @@ public class ProveedorController {
     ProveedorModelo proveedorModelo;
     EmpresaController empresaController;
 
+    /**
+     * Constructor de la clase
+     * @throws BbddException controlado
+     * @throws FicheroException controlado
+     */
     public ProveedorController() throws BbddException, FicheroException {
         empresaController = new EmpresaController();
         proveedorModelo = new ProveedorModelo();
     }
     
+    /**
+     * Funcion que verifica si existe un proveedor en la bbdd
+     * @param proveedor a verificar
+     * @return true/false existe o no
+     * @throws BbddException controlado
+     */
     private boolean existe(Proveedor proveedor) throws BbddException {
         return buscar(proveedor.getCif()) != null;
     }
 
+    /**
+     * Funcion que valida un proveedor
+     * @param proveedor a validar
+     * @throws AlmacenException controlado
+     */
     public void validar(Proveedor proveedor) throws AlmacenException {
         String mensaje = "";
         if (proveedor == null) {
-            throw new AlmacenException("El cliente no puede ser nulo");
+            throw new AlmacenException("El proveedor no puede ser nulo");
         }
-        if (proveedor.getCif().isEmpty() || proveedor.getCif() == null) {
-            mensaje += "El cif del proveedor no puede ser nulo o vacio\n";
+        if (proveedor.getCif() == null || !Validaciones.validarCif(proveedor.getCif())) {
+            mensaje += "El cif del proveedor no puede ser nulo o no valido\n";
         }
-        if (proveedor.getTipoProducto().isEmpty() || proveedor.getTipoProducto() == null) {
-            mensaje += "El tipo de producto del proveedor no puede ser nulo o vacio\n";
+        if (proveedor.getTipoProducto() == null || !Validaciones.validarTipoProducto(proveedor.getTipoProducto())) {
+            mensaje += "El tipo de producto del proveedor no puede ser nulo o no valido\n";
         }
         if(!mensaje.isBlank()) {
             throw new AlmacenException(mensaje);
@@ -47,7 +63,7 @@ public class ProveedorController {
     public void insertar(Proveedor proveedor) throws BbddException, AlmacenException {
         validar(proveedor);
         if(!existe(proveedor)) proveedorModelo.insertar(proveedor);
-        else throw new AlmacenException("El provedor ya existe en la base de datos");
+        else throw new AlmacenException("El proveedor ya existe en la base de datos");
     }
     /**
      * Metodo que elimina un proveedor de la bbdd
@@ -58,7 +74,7 @@ public class ProveedorController {
     public void eliminar(Proveedor proveedor) throws BbddException, AlmacenException {
         validar(proveedor);
         if(existe(proveedor)) proveedorModelo.eliminar(proveedor);
-        else throw new AlmacenException("El provedor no existe en la base de datos");
+        else throw new AlmacenException("El proveedor no existe en la base de datos");
     }
     /**
      * Metodo que modifica un proveedor de la bbdd
@@ -69,7 +85,7 @@ public class ProveedorController {
     public void modificar(Proveedor proveedor) throws BbddException, AlmacenException {
         validar(proveedor);
         if(existe(proveedor)) proveedorModelo.modificar(proveedor);
-        else throw new AlmacenException("El provedor no existe en la base de datos");
+        else throw new AlmacenException("El proveedor no existe en la base de datos");
     }
     /**
      * Metodo que busca un proveedor en la bbdd

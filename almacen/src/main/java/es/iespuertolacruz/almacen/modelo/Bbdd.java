@@ -23,6 +23,18 @@ public class Bbdd {
     protected String usuario;
     protected String password;
 
+    /**
+     * Constructor de la clase
+     * 
+     * @param nombreTabla a generar
+     * @param clave       de la tabla
+     * @param driver      de la bbdd
+     * @param url         de la bbdd
+     * @param usuario     de la bbdd
+     * @param password    de la bbd
+     * @throws BbddException    controlado
+     * @throws FicheroException controlado
+     */
     public Bbdd(String nombreTabla, String clave, String driver, String url, String usuario, String password)
             throws BbddException, FicheroException {
         this.nombreTabla = nombreTabla;
