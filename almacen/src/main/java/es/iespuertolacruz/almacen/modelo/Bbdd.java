@@ -61,7 +61,7 @@ public class Bbdd {
         try {
             connection = getConnection();
             databaseMetaData = connection.getMetaData();
-            resultSet = databaseMetaData.getTables(null, null, null, new String[] { "TABLE" });
+            resultSet = databaseMetaData.getTables(null, null, null, new String[] {"TABLE"});
             while (resultSet.next()) {
                 listaTablas.add(resultSet.getString("TABLE_NAME"));
             }

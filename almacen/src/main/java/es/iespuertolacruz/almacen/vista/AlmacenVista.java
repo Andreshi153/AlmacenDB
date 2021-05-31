@@ -111,7 +111,7 @@ public class AlmacenVista {
         scanner.nextLine();
         switch (opcion) {
             case 1:
-                Producto producto = buscarProducto();
+                Producto producto = buscarProducto(introducirIdProducto());
                 System.out.println(
                         producto != null ? producto.toString() : "No existe ningun producto con ese identificador");
                 break;
@@ -140,9 +140,8 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
-    private static Producto buscarProducto() throws BbddException, FicheroException {
+    public static Producto buscarProducto(int idProducto) throws BbddException, FicheroException {
         ProductoController productoController = new ProductoController();
-        int idProducto = introducirIdProducto();
         return productoController.buscar(idProducto);
     }
 
@@ -197,7 +196,7 @@ public class AlmacenVista {
      */
     private static void modificarProducto() throws BbddException, AlmacenException, FicheroException {
         ProductoController productoController = new ProductoController();
-        Producto producto = crearProducto(buscarProducto().getIdProducto());
+        Producto producto = crearProducto(buscarProducto(introducirIdProducto()).getIdProducto());
         productoController.modificar(producto);
     }
 
@@ -210,7 +209,7 @@ public class AlmacenVista {
      */
     private static void eliminarProducto() throws BbddException, AlmacenException, FicheroException {
         ProductoController productoController = new ProductoController();
-        Producto producto = buscarProducto();
+        Producto producto = buscarProducto(introducirIdProducto());
         productoController.eliminar(producto);
     }
 
@@ -268,7 +267,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException
      */
-    private static ListaProductos buscarListaProductos(int idListaProductos) throws BbddException, FicheroException {
+    public static ListaProductos buscarListaProductos(int idListaProductos) throws BbddException, FicheroException {
         ListaProductosController listaProductosController = new ListaProductosController();
         return listaProductosController.buscar(idListaProductos);
     }
@@ -355,7 +354,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
-    private static String listadoProductosToString() throws BbddException, FicheroException {
+    public static String listadoProductosToString() throws BbddException, FicheroException {
         ProductoController productoController = new ProductoController();
         ArrayList<Producto> listado = productoController.buscarTodos();
         StringBuilder informacion = new StringBuilder("Listado de productos:");
@@ -404,7 +403,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
-    private static Operacion buscarOperacion(int idListaProductos) throws BbddException, FicheroException {
+    public static Operacion buscarOperacion(int idListaProductos) throws BbddException, FicheroException {
         OperacionController operacionController = new OperacionController();
         return operacionController.buscar(idListaProductos);
     }
@@ -517,7 +516,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException
      */
-    private static Empresa buscarEmpresa(String cif) throws BbddException, FicheroException {
+    public static Empresa buscarEmpresa(String cif) throws BbddException, FicheroException {
         EmpresaController empresaController = new EmpresaController();
         return empresaController.buscar(cif);
     }
