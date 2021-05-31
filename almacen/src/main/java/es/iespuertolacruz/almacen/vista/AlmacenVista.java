@@ -375,7 +375,7 @@ public class AlmacenVista {
      * @throws FicheroException controlado
      */
     public static void menuOperaciones() throws BbddException, AlmacenException, FicheroException {
-        menu(3);
+        System.out.println(menu(3));
         int opcion = scanner.nextInt();
         scanner.nextLine();
         switch (opcion) {
@@ -470,7 +470,7 @@ public class AlmacenVista {
      * @throws FicheroException controlado
      */
     public static void menuEmpresas() throws BbddException, FicheroException, AlmacenException {
-        menu(4);
+        System.out.println(menu(4));
         int opcion = scanner.nextInt();
         scanner.nextLine();
         switch (opcion) {
@@ -599,7 +599,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException
      */
-    private static String listadoClientesToString() throws BbddException, FicheroException {
+    public static String listadoClientesToString() throws BbddException, FicheroException {
         ClienteController clienteController = new ClienteController();
         ArrayList<Cliente> listado = clienteController.buscarTodos();
         StringBuilder informacion = new StringBuilder("Listado de clientes:");
@@ -617,7 +617,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException
      */
-    private static String listadoProveedoresToString() throws BbddException, FicheroException {
+    public static String listadoProveedoresToString() throws BbddException, FicheroException {
         ProveedorController proveedorController = new ProveedorController();
         ArrayList<Proveedor> listado = proveedorController.buscarTodos();
         StringBuilder informacion = new StringBuilder("Listado de proveedores:");
@@ -739,7 +739,7 @@ public class AlmacenVista {
      * @throws BbddException    controlado
      * @throws FicheroException controlado
      */
-    private static double obtenerValorProductosTotal() throws BbddException, FicheroException {
+    public static double obtenerValorProductosTotal() throws BbddException, FicheroException {
         ProductoEstanteriaController productoEstanteriaController = new ProductoEstanteriaController();
         return productoEstanteriaController.obtenerValorProductosTotal();
     }
