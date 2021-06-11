@@ -16,6 +16,8 @@
 
 &nbsp;&nbsp;&nbsp;<img src="https://github.com/Andreshi153/AlmacenDB/blob/master/imagenes/icons/especificacion-icon.png" width="24px"> [Especificación de los atributos](https://github.com/Andreshi153/AlmacenDB/wiki/Especificaci%C3%B3n-de-los-atributos)
 
+&nbsp;&nbsp;&nbsp;<img src="https://github.com/Andreshi153/AlmacenDB/blob/master/imagenes/icons/procedimientos-icon.png" width="24px"> [Procedimientos, vistas y disparadores](https://github.com/Andreshi153/AlmacenDB/wiki/Procedimientos,-vistas-y-disparadores)
+
 <h3>2. Aplicación AlmacenDB</h3>
    
 &nbsp;&nbsp;&nbsp;<img src="https://github.com/Andreshi153/AlmacenDB/blob/master/imagenes/icons/diagramas-icon.png" width="24px"> [Diagrama Casos de Uso](https://github.com/Andreshi153/AlmacenDB/wiki/Diagrama-Casos-de-Uso)
