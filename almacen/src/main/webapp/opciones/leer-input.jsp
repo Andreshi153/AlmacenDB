@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page errorPage = "../includes/error/showError.jsp" %>
     <% String tabla=request.getParameter("tabla"); 
     String accion = request.getParameter("accion");
     String boton = accion.equals("eliminar") ? "Eliminar" : "Consultar";

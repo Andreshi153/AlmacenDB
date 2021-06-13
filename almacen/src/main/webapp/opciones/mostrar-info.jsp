@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page errorPage = "../includes/error/showError.jsp" %>
     <%@page import="es.iespuertolacruz.almacen.controlador.*, java.lang.reflect.Method" %>
         <% String tabla=request.getParameter("tabla"); String
             tablaUpper=tabla.replaceFirst(String.valueOf(tabla.charAt(0)),

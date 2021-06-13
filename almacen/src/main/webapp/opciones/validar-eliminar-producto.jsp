@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page errorPage = "../includes/error/showError.jsp" %>
     <%@page import="es.iespuertolacruz.almacen.controlador.ProductoController, es.iespuertolacruz.almacen.api.Producto"%>
         <% ProductoController productoController = new ProductoController();
             int identificador= Integer.parseInt(request.getParameter("identificador"));
