@@ -69,10 +69,10 @@ public class Operacion {
      * @return informacion de la operacion
      */
     public String toString() {
-        return "-> Id lista de productos: " + this.idListaProductos + 
-        "\n· CIF de la empresa asociada: " + this.cif + 
-        "\n· Muelle: " + this.idMuelle + "\n· Fecha: " + this.fecha + 
-        "\n· Tipo de operacion: " + this.tipoOperacion;
+        return "# Id lista de productos: " + this.idListaProductos + 
+        "\n# CIF de la empresa asociada: " + this.cif + 
+        "\n# Muelle: " + this.idMuelle + "\n# Fecha: " + this.fecha + 
+        "\n# Tipo de operacion: " + this.tipoOperacion;
     }
 
 }

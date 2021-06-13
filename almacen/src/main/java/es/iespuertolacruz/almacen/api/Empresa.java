@@ -69,9 +69,9 @@ public class Empresa {
    * @return informacion de la empresa
    */
   public String toString() {
-    return "-> CIF: " + this.cif + "\n· Nombre: " + this.nombre
-    + "\n· Direccion: " + this.direccion + "\n· Telefono: " + this.telefono
-    + "\n· Correo: " + this.correo;
+    return "# CIF: " + this.cif + "\n# Nombre: " + this.nombre
+    + "\n# Direccion: " + this.direccion + "\n# Telefono: " + this.telefono
+    + "\n# Correo: " + this.correo;
   }
 
 }

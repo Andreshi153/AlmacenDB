@@ -263,6 +263,20 @@ header {
     transition: all 1s ease-out;
 }
 
+footer {
+    position: fixed;
+    top: 0;
+    right: -100px;
+    max-width: 100px;
+    z-index: 10;
+    transition: all 1s ease-out;
+    background-color: coral;
+    height: 100vh;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+}
+
 nav {
     position: absolute;
     top: 0;
@@ -295,7 +309,8 @@ a:visited {
     color: black;
 }
 
-header>nav>ul {
+header>nav>ul,
+footer ul {
     list-style-type: none;
     height: 100%;
     padding: 0.5em;
@@ -398,13 +413,13 @@ li {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border-radius: 15%;
-    box-shadow: 5px 0px 10px rgb(0, 0, 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: 5px 0px 10px rgb(0, 0, 0)
 }
 
 .tarjeta-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: brown;
     color: white;
     transform: rotateY(180deg);
@@ -414,36 +429,65 @@ li {
     max-width: 100%;
 }
 
-.menu-1>div>div {
+.menu-rojo>div>div {
     background-color: brown;
 }
 
-.menu-2>div>div {
+.menu-naranja>div>div {
     background-color: rgb(233, 131, 36);
 }
 
-.menu-3>div>div {
+.menu-agua>div>div {
     background-color: rgb(56, 172, 114);
 }
 
-.menu-4>div>div {
+.menu-lila>div>div {
     background-color: rgb(158, 98, 182);
 }
 
-.menu-5>div>div {
+.menu-verde>div>div {
     background-color: rgb(123, 151, 31);
 }
 
-.menu-6>div>div {
+.menu-darknaranja>div>div {
     background-color: rgb(211, 82, 23);
 }
 
-.menu-2 img,
-.menu-3 img,
-.menu-4 img {
-    max-width: 70%;
+.menu-azul>div>div {
+    background-color: rgb(19, 119, 165);
 }
 
-.menu-5 img {
-    filter: invert(40%);
+.tarjeta .imagen-principal {
+    position: relative;
+    top: 10%;
+}
+
+.tarjeta .imagen-sec {
+    position: absolute;
+    max-width: 100px;
+    bottom: 5%;
+    right: 5%;
+}
+
+.tarjeta .edit {
+    bottom: 10%;
+}
+
+.tarjeta .list {
+    filter: grayscale(50%);
+}
+
+.operacion {
+    transform: rotateY(180deg);
+}
+
+.tarjeta .imagen-grande {
+    max-width: 70%;
+    top: 20%;
+}
+
+.centrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -98,6 +98,15 @@ public class ProductoController {
      * @param idProducto del producto a buscar
      * @throws BbddException controlado
      */
+    public Producto buscar(String idProducto) throws BbddException {
+        return productoModelo.buscar(idProducto);
+    }
+
+    /**
+     * Metodo que busca un producto en la bbdd
+     * @param idProducto del producto a buscar
+     * @throws BbddException controlado
+     */
     public Producto buscar(int idProducto) throws BbddException {
         return productoModelo.buscar(String.valueOf(idProducto));
     }

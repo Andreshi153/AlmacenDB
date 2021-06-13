@@ -58,7 +58,7 @@ public class Producto {
      * @return informacion del producto
      */
     public String toString() {
-        return "-> Id: " + this.idProducto + "\n-> Nombre: " + this.nombre + "\n-> Precio unitario: " + this.precioUnitario + "\n-> Tipo: " + this.tipo + "\n";
+        return "Id: " + this.idProducto + "\n# Nombre: " + this.nombre + "\n# Precio unitario: " + this.precioUnitario + "# Tipo: " + this.tipo + "\n";
     }
 
 }

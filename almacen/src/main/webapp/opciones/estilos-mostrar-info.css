@@ -1,0 +1,211 @@
+:root {
+    --color-camion: rgb(165, 165, 165);
+}
+
+html {
+    height: 100%;
+    background-image: url("../imagenes/fondo.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat no-repeat;
+}
+
+a:visited,
+a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1,
+h3,
+p {
+    text-align: center;
+}
+
+.infoObjeto {
+    padding: 3em;
+    border: 1px solid black;
+    width: fit-content;
+}
+
+#loader {
+    position: fixed;
+    z-index: 2;
+    bottom: 3%;
+    padding: 5em;
+    width: 100%;
+}
+
+.TruckLoader {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--color-camion);
+    color: black;
+    background-repeat: no-repeat no-repeat;
+    background-position: center center;
+    animation: move-truck 5s 1;
+    background-size: 100% auto;
+    border-radius: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.TruckLoader:before,
+.TruckLoader:after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #fff;
+    background: #333;
+    position: absolute;
+    bottom: -20px;
+}
+
+.TruckLoader:before {
+    left: 6px;
+}
+
+.TruckLoader:after {
+    right: 6px;
+}
+
+.TruckLoader-cab {
+    position: absolute;
+    left: -41%;
+    bottom: 0;
+    width: 40%;
+    height: 33%;
+    background-color: rgb(185, 0, 0);
+    border-radius: 40% 0 4px 4px;
+}
+
+.TruckLoader-cab:before,
+.TruckLoader-cab:after {
+    position: absolute;
+    content: "";
+    display: block;
+    background-color: rgb(185, 0, 0);
+}
+
+.TruckLoader-cab:before {
+    width: 40px;
+    height: 30px;
+    top: -30px;
+    right: 0;
+    border-radius: 100% 0 0 0;
+}
+
+.TruckLoader-cab:after {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    background: #444;
+    left: 5px;
+    border: 2px solid #fff;
+    background: #333;
+    position: absolute;
+    bottom: -20px;
+}
+
+@-webkit-keyframes move-truck {
+    0% {
+        color: var(--color-camion);
+        left: 200%;
+    }
+    75% {
+        left: 45%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+
+.botones {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    transition: visibility 5s 2s;
+}
+
+.botones a {
+    box-sizing: content-box;
+    margin: 0 1em;
+}
+
+.boton {
+    padding: 1em;
+    border: 1px dashed black;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.404);
+    background-color: darksalmon;
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    max-width: 100px;
+    z-index: 10;
+    transition: all 1s ease-out;
+}
+
+nav {
+    position: absolute;
+    top: 0;
+    background-color: coral;
+    height: 100vh;
+    width: 100px;
+    z-index: 1;
+}
+
+#mostrarMenu {
+    min-width: 50px;
+    min-height: 50px;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+header>nav>ul,
+footer ul {
+    list-style-type: none;
+    height: 100%;
+    padding: 0.5em;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    padding: 0;
+}
+
+footer {
+    position: fixed;
+    top: 0;
+    right: 0px;
+    max-width: 100px;
+    z-index: 10;
+    transition: all 1s ease-out;
+    background-color: coral;
+    height: 100vh;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+}
+
+li {
+    text-align: center;
+    margin: 0;
+    padding: 1.5em 0;
+    font-weight: bold;
+}

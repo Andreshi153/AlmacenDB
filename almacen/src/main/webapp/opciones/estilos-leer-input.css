@@ -1,0 +1,349 @@
+:root {
+    --color-camion: rgb(165, 165, 165);
+}
+
+html {
+    height: 100%;
+    background-image: url("../imagenes/fondo.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat no-repeat;
+}
+
+a:visited,
+a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1,
+h3,
+p {
+    text-align: center;
+}
+
+.radio {
+    margin: 0 0 25px;
+}
+
+.infoObjeto {
+    padding: 3em;
+    border: 1px solid black;
+    width: fit-content;
+}
+
+#loader {
+    position: fixed;
+    z-index: 2;
+    bottom: 3%;
+    padding: 5em;
+    width: 100%;
+}
+
+.TruckLoader {
+    position: relative;
+    min-width: 300px;
+    width: fit-content;
+    min-height: 300px;
+    height: fit-content;
+    background-color: var(--color-camion);
+    color: black;
+    background-repeat: no-repeat no-repeat;
+    background-position: center center;
+    animation: move-truck 5s 1;
+    background-size: 100% auto;
+    border-radius: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.TruckLoader:before,
+.TruckLoader:after {
+    content: "";
+    display: block;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #fff;
+    background: #333;
+    position: absolute;
+    bottom: -20px;
+}
+
+.TruckLoader:before {
+    left: 6px;
+}
+
+.TruckLoader:after {
+    right: 6px;
+}
+
+.TruckLoader-cab {
+    position: absolute;
+    right: -41%;
+    bottom: 0;
+    width: 40%;
+    height: 33%;
+    background: rgb(185, 0, 0);
+    border-radius: 40% 0 4px 4px;
+    transform: rotateY(180deg);
+}
+
+.TruckLoader-cab:before,
+.TruckLoader-cab:after {
+    position: absolute;
+    content: "";
+    display: block;
+    background: rgb(185, 0, 0);
+}
+
+.TruckLoader-cab:before {
+    width: 40px;
+    height: 30px;
+    top: -30px;
+    right: 0;
+    border-radius: 100% 0 0 0;
+}
+
+.TruckLoader-cab:after {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    background: #444;
+    left: 5px;
+    border: 2px solid #fff;
+    background: #333;
+    position: absolute;
+    bottom: -20px;
+}
+
+@-webkit-keyframes move-truck {
+    0% {
+        color: var(--color-camion);
+        left: -200%;
+    }
+    75% {
+        left: 55%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+
+*,
+ ::after,
+ ::before {
+    box-sizing: border-box;
+}
+
+.form {
+    min-height: 300px;
+    height: 100%;
+    width: 300px;
+    padding: 64px 15px 24px;
+    margin: 0 auto;
+    border: 1px solid black;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.486);
+}
+
+.form p {
+    font-weight: bold;
+}
+
+.form .control {
+    margin: 0 0 25px;
+}
+
+.form .control input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+}
+
+.form .control input:hover,
+.form .control input:focus {
+    outline: none;
+    border: 0;
+}
+
+.form .btn {
+    width: 100%;
+    display: block;
+    padding: 14px 16px;
+    background: transparent;
+    outline: none;
+    border: 0;
+    color: #fff;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.block-cube {
+    position: relative;
+}
+
+.block-cube .bg-top {
+    position: absolute;
+    height: 10px;
+    background: #020024;
+    background: linear-gradient(90deg, #020024 0%, #7f268f 37%, #ff0000 94%);
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+}
+
+.block-cube .bg-top .bg-inner {
+    bottom: 0;
+}
+
+.block-cube .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #020024;
+    background: linear-gradient(90deg, #020024 0%, #661053 37%, #ff0000 94%);
+}
+
+.block-cube .bg-right {
+    position: absolute;
+    background: #020024;
+    background: #ff0000;
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+}
+
+.block-cube .bg-right .bg-inner {
+    left: 0;
+}
+
+.block-cube .bg .bg-inner {
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-inner {
+    background: #212121;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+.block-cube .text {
+    position: relative;
+    z-index: 2;
+}
+
+.block-cube.block-input input {
+    position: relative;
+    z-index: 2;
+}
+
+.block-cube.block-input input:focus~.bg-right .bg-inner,
+.block-cube.block-input input:focus~.bg-top .bg-inner,
+.block-cube.block-input input:focus~.bg-inner .bg-inner {
+    top: 100%;
+    background: rgba(109, 9, 9, 0.5);
+}
+
+.block-cube.block-input .bg-top,
+.block-cube.block-input .bg-right,
+.block-cube.block-input .bg {
+    background: rgba(109, 9, 9, 0.5);
+    transition: background 0.2s ease-in-out;
+}
+
+.block-cube.block-input .bg-right .bg-inner,
+.block-cube.block-input .bg-top .bg-inner {
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube.block-input:focus .bg-top,
+.block-cube.block-input:focus .bg-right,
+.block-cube.block-input:focus .bg,
+.block-cube.block-input:hover .bg-top,
+.block-cube.block-input:hover .bg-right,
+.block-cube.block-input:hover .bg {
+    background: rgba(109, 9, 9, 0.8);
+}
+
+.block-cube.block-cube-hover:focus .bg .bg-inner,
+.block-cube.block-cube-hover:hover .bg .bg-inner {
+    top: 100%;
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    max-width: 100px;
+    z-index: 10;
+    transition: all 1s ease-out;
+}
+
+nav {
+    position: absolute;
+    top: 0;
+    background-color: coral;
+    height: 100vh;
+    width: 100px;
+    z-index: 1;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+header>nav>ul,
+footer ul {
+    list-style-type: none;
+    height: 100%;
+    padding: 0.5em;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    padding: 0;
+}
+
+footer {
+    position: fixed;
+    top: 0;
+    right: 0px;
+    max-width: 100px;
+    z-index: 10;
+    transition: all 1s ease-out;
+    background-color: coral;
+    height: 100vh;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+}
+
+li {
+    text-align: center;
+    margin: 0;
+    padding: 1.5em 0;
+    font-weight: bold;
+}

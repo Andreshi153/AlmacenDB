@@ -107,4 +107,13 @@ public class OperacionController {
     public Operacion buscar(int idListaProductos) throws BbddException {
         return operacionModelo.buscar(String.valueOf(idListaProductos));
     }
+
+    /**
+     * Metodo que busca una operacion en la bbdd
+     * @param idListaProductos de la operacion a buscar
+     * @throws BbddException controlado
+     */
+    public Operacion buscar(String idListaProductos) throws BbddException {
+        return operacionModelo.buscar(idListaProductos);
+    }
 }
